@@ -7,25 +7,24 @@
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquareRound@master/nanumsquareround.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    .detail-card { background: white; padding: 25px; border-radius: 25px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #f0f2f5; }
+    .detail-card { background: white; padding: 25px; border-radius: 25px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #f0f2f5; overflow: hidden; }
     .detail-card h2 { font-size: 19px; color: var(--navy-deep); margin: 0 0 15px; display: flex; align-items: center; gap: 8px; }
-    .detail-card h3 { font-size: 16px; color: #333; margin: 15px 0 10px; border-left: 3px solid var(--navy-light); padding-left: 10px; }
+    .detail-card h3 { font-size: 16px; color: #333; margin: 15px 0 10px; border-left: 3px solid var(--navy-light); padding-left: 10px; font-weight: 800; }
     .detail-card p { font-size: 14.5px; line-height: 1.7; color: #555; margin: 0 0 10px; }
     
-    .step-list { margin: 15px 0 25px 10px; border-left: 2px dashed #ddd; padding-left: 20px; }
-    .step-item { position: relative; margin-bottom: 20px; }
-    .step-item::before { content: ""; position: absolute; left: -26px; top: 5px; width: 10px; height: 10px; background: var(--navy-light); border-radius: 50%; }
-    .step-title { font-weight: 800; font-size: 15px; color: var(--navy-deep); margin-bottom: 4px; }
+    .info-box { background: #f8faff; padding: 18px; border-radius: 15px; font-size: 14px; color: #444; line-height: 1.6; margin-bottom: 15px; }
+    .doc-list { list-style: none; padding: 0; margin: 10px 0 20px 0; }
+    .doc-list li { position: relative; padding-left: 20px; margin-bottom: 8px; font-size: 14px; color: #555; }
+    .doc-list li::before { content: "•"; position: absolute; left: 0; color: var(--navy-light); font-weight: bold; }
 
-    .info-box { background: #f8faff; padding: 15px; border-radius: 12px; font-size: 14px; color: #444; }
-
+    /* 버튼 스타일 강화 및 여백 확보 */
     .apply-btn {
-        display: block; width: 100%; padding: 20px; background: var(--navy-deep); color: white;
+        display: block; width: 100%; padding: 20px; background: #1a237e !important; color: white !important;
         text-align: center; text-decoration: none; border-radius: 18px; font-weight: 800;
-        font-size: 17px; margin-top: 10px; box-shadow: 0 8px 20px rgba(26, 35, 126, 0.2);
-        box-sizing: border-box;
+        font-size: 17px; margin: 10px 0; box-shadow: 0 8px 20px rgba(26, 35, 126, 0.2);
+        box-sizing: border-box; clear: both;
     }
-    .apply-btn:active { transform: scale(0.98); }
+    .apply-btn:active { transform: scale(0.98); opacity: 0.9; }
   </style>
 </head>
 <body>
@@ -42,26 +41,29 @@
     </section>
 
     <section class="detail-card">
-      <h2><span>🚀</span> 신청 및 절차</h2>
-      <div class="step-list">
-        <div class="step-item"><div class="step-title">01. 신청</div><p>워크넷 구직등록 및 고용24 온라인 신청</p></div>
-        <div class="step-item"><div class="step-title">02. 수급자격 결정</div><p>신청일로부터 1개월 이내 서면 통지</p></div>
-        <div class="step-item"><div class="step-title">03. 취업활동계획 수립</div><p>진로상담 및 고용센터 담당자와 상담</p></div>
-        <div class="step-item"><div class="step-title">04. 구직활동 및 수당지급</div><p>계획에 따른 활동 이행 및 수당 청구</p></div>
-      </div>
+      <h2><span>🎯</span> 지원 대상 요건</h2>
+      <h3>Ⅰ유형 (수당 지급)</h3>
+      <div class="info-box">15~69세, 중위소득 60% 이하, 재산 4억 이하</div>
+      <h3>Ⅱ유형 (비용 지원)</h3>
+      <div class="info-box">청년(소득무관), 중장년(중위소득 100% 이하) 등</div>
+    </section>
+
+    <section class="detail-card">
+      <h2><span>💰</span> 주요 혜택</h2>
+      <p><strong>구직촉진수당:</strong> 월 50만원씩 6개월 지원<br><strong>취업성공수당:</strong> 최대 150만원 추가 지원</p>
+    </section>
+
+    <section class="detail-card">
+      <h2><span>🚀</span> 신청 및 서류</h2>
+      <p>워크넷 구직등록 후 온라인 또는 방문 신청이 가능합니다.</p>
+      <h3>필요 서류</h3>
+      <ul class="doc-list">
+        <li>취업지원 신청서</li>
+        <li>가족관계증명서</li>
+        <li>소득 및 재산 증빙서류 (필요시)</li>
+      </ul>
       <a href="https://www.work24.go.kr" target="_blank" class="apply-btn">지금 바로 지원하러 가기</a>
     </section>
-
-    <section class="detail-card">
-      <h2><span>🛠</span> 주요 프로그램</h2>
-      <h3>취업지원 프로그램</h3>
-      <p>심리상담, 직업훈련, 이력서 클리닉, 면접 코칭 등 맞춤형 서비스 제공</p>
-      <h3>일 경험 프로그램</h3>
-      <p><strong>체험형:</strong> 단기 직무 체험(30일 내외)<br><strong>인턴형:</strong> 최대 3개월 실무 및 취업 연계</p>
-    </section>
-
-    <section class="detail-card">
-      <h2><span>👥</span> 지원 유형</h2>
-      <div class="info-box">
-        <strong>Ⅰ유형:</strong> 요건심사형 중위소득 60% 이하 (구직촉진수당 제공)<br>
-        <strong>Ⅱ유형:</strong> 청년, 중장년 등 취업취약계
+  </main>
+</body>
+</html>
