@@ -1,151 +1,187 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>고용24 - 스마트 정책 가이드</title>
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquareRound@master/nanumsquareround.min.css">
-  <link rel="stylesheet" href="style.css">
-  <style>
-    .news-section {
-      background: white; border-radius: 25px; padding: 25px;
-      margin: 25px 0 50px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #f0f2f5;
-    }
-    .news-header {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #f8f9fa;
-    }
-
-    /* 🛠 [수정] 제목과 배지를 세로 가운데 정렬 */
-    .news-header h2 { 
-      font-size: 18px; 
-      color: var(--navy-deep); 
-      font-weight: 800; 
-      margin: 0; 
-      display: flex; 
-      align-items: center; /* 세로축 중앙 정렬 */
-    }
-
-    /* 🛠 [수정] 배지 위치 및 간격 미세 조정 */
-    .live-badge {
-      background: #ff5252; color: white; font-size: 10px; padding: 3px 7px;
-      border-radius: 4px; font-weight: 800; animation: blink 1.5s infinite;
-      margin-left: 10px; /* 제목과의 간격 확보 */
-      margin-top: 1px;  /* 시각적 보정을 위해 살짝 내림 (폰트마다 다를 수 있음) */
-      line-height: 1;    /* 배지 내부 텍스트 정렬 */
-    }
-
-    .news-list { list-style: none; padding: 0; margin: 0; }
-    .news-item { padding: 18px 0; border-bottom: 1px solid #f8f9fa; transition: background 0.2s; }
-    .news-item:active { background: #f5f7ff; border-radius: 12px; }
-    .news-item:last-child { border-bottom: none; }
-    .news-item a { text-decoration: none; color: #333; font-size: 15px; line-height: 1.6; display: block; font-weight: 500; }
-    .news-item a strong { color: #1a237e; margin-right: 6px; font-weight: 800; }
-    .news-date { font-size: 12px; color: #999; margin-top: 8px; display: block; }
-    @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-    .loading-text { font-size: 14px; color: #999; text-align: center; padding: 40px 0; }
-  </style>
-</head>
-<body class="is-loading">
-  <div id="splash" class="splash">
-    <div class="splash-logo"><span>💼</span></div>
-    <div class="splash-title">고용24</div>
-    <div class="splash-sub">알기 쉬운 고용 정책 가이드</div>
-    <button class="start-btn" onclick="startApp()">시작하기</button>
-  </div>
-
-  <div id="mainContent">
-    <header class="header">
-      <div class="header-inner"><h1>고용24</h1></div>
-    </header>
-
-    <main class="container">
-      <section class="intro-section">
-        <p class="intro-tag">Employment24 Care Service</p>
-        <h2 class="welcome-title">일하는 당신의 내일을 위해<br><strong>고용24</strong>가 든든한 파트너가 됩니다.</h2>
-        <div class="intro-desc">
-          <p>고용24는 복잡하고 까다로운 고용 정책을 누구나 쉽게 이해하고 혜택을 누릴 수 있도록 돕는 스마트 가이드 서비스입니다.</p>
-        </div>
-      </section>
-
-      <section class="menu-grid">
-        <p class="section-label">맞춤형 고용 서비스 센터</p>
-        <div class="grid-container">
-          <a href="unemployment-check.html" class="grid-item"><span class="icon">✅</span><span class="label">실업급여<br>수급조건</span></a>
-          <a href="unemployment-calc.html" class="grid-item"><span class="icon">🧮</span><span class="label">실업급여<br>모의계산</span></a>
-          <a href="support-info.html" class="grid-item"><span class="icon">📋</span><span class="label">국민취업<br>지원제도</span></a>
-          <a href="card-info.html" class="grid-item"><span class="icon">💳</span><span class="label">내일배움<br>카드 안내</span></a>
-        </div>
-      </section>
-
-      <section class="news-section">
-        <div class="news-header">
-          <h2>고용관련 최신 뉴스 <span class="live-badge">LIVE</span></h2>
-        </div>
-        <div id="news-container">
-          <p class="loading-text">최신 정보를 불러오고 있습니다...</p>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <script>
-    function startApp() {
-      const splash = document.getElementById('splash');
-      sessionStorage.setItem('emp_splash_viewed', 'true');
-      splash.classList.add('fade-out');
-      setTimeout(() => { 
-        splash.style.display = 'none';
-        document.body.classList.remove('is-loading');
-      }, 500);
-    }
-
-    async function fetchLiveNews() {
-      const container = document.getElementById('news-container');
-      const keywords = encodeURIComponent('실업급여 국민내일배움카드 국민취업지원제도');
-      const rssUrl = `https://news.google.com/rss/search?q=${keywords}&hl=ko&gl=KR&ceid=KR:ko`;
-      const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
-
-      try {
-        const res = await fetch(apiUrl);
-        const data = await res.json();
-        
-        if (data.status === 'ok' && data.items.length > 0) {
-          const sortedItems = data.items.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-
-          let html = '<ul class="news-list">';
-          sortedItems.slice(0, 10).forEach(item => {
-            const pubDate = new Date(item.pubDate);
-            const dateString = pubDate.toLocaleDateString('ko-KR', { 
-              month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' 
-            });
-            
-            html += `
-              <li class="news-item">
-                <a href="${item.link}" target="_blank" rel="noopener noreferrer">
-                  <strong>[뉴스]</strong> ${item.title}
-                  <span class="news-date">${dateString}</span>
-                </a>
-              </li>`;
-          });
-          html += '</ul>';
-          container.innerHTML = html;
-        } else {
-          container.innerHTML = '<p class="loading-text">현재 새로운 뉴스가 없습니다.</p>';
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>고용24 - 스마트 정책 가이드</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquareRound@master/nanumsquareround.min.css">
+    <style>
+        :root {
+            --navy-deep: #1a237e;
+            --main-blue: #2563eb;
+            --bg-gray: #f8f9fa;
         }
-      } catch (e) {
-        container.innerHTML = '<p class="loading-text">데이터를 불러오는 중 오류가 발생했습니다.</p>';
-      }
-    }
 
-    (function() {
-      fetchLiveNews();
-      if (sessionStorage.getItem('emp_splash_viewed') === 'true') {
-        const splash = document.getElementById('splash');
-        if(splash) splash.style.display = 'none';
-        document.body.classList.remove('is-loading');
-      }
-    })();
-  </script>
+        /* 🚀 스플래시 화면 (페이드 아웃 & 뒤로가기 방지용) */
+        .splash {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 10000;
+            transition: opacity 0.5s ease, visibility 0.5s; text-align: center;
+        }
+        .splash-logo { font-size: 60px; margin-bottom: 10px; }
+        .splash-title { font-size: 28px; font-weight: 800; color: var(--navy-deep); margin-bottom: 5px; }
+        .splash-sub { font-size: 16px; color: #666; margin-bottom: 30px; }
+        .start-btn {
+            background: var(--navy-deep); color: white; border: none;
+            padding: 15px 50px; border-radius: 50px; font-size: 18px;
+            font-weight: 800; cursor: pointer; transition: 0.3s;
+        }
+        .start-btn:active { transform: scale(0.95); }
+        .fade-out { opacity: 0; visibility: hidden; }
+
+        /* 메인 레이아웃 */
+        body { font-family: 'NanumSquareRound', sans-serif; background: var(--bg-gray); margin: 0; padding: 0; color: #333; }
+        .header { background: white; padding: 20px; text-align: center; border-bottom: 1px solid #eee; }
+        .header h1 { font-size: 20px; font-weight: 800; color: var(--navy-deep); margin: 0; }
+        .container { padding: 20px; max-width: 600px; margin: 0 auto; }
+
+        /* 🛠 [수정] 인트로 섹션 - 파란색 효과 제거 및 깔끔한 화이트/그레이 톤으로 변경 */
+        .intro-section { margin-bottom: 30px; }
+        .intro-tag { color: var(--navy-deep); font-weight: 800; font-size: 13px; margin-bottom: 10px; }
+        .welcome-title { font-size: 22px; line-height: 1.4; margin-bottom: 15px; }
+        .welcome-title strong { color: var(--navy-deep); }
+        
+        .intro-desc { 
+            background: #ffffff; /* 파란색 배경 제거 */
+            padding: 20px; 
+            border-radius: 15px; 
+            border: 1px solid #e5e7eb; /* 연한 그레이 테두리 */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+        }
+        .intro-desc p { 
+            margin: 0; 
+            font-size: 14px; 
+            line-height: 1.6; 
+            color: #4b5563; /* 가독성 좋은 진한 그레이 */
+        }
+
+        /* 메뉴 그리드 */
+        .section-label { font-size: 14px; font-weight: 800; margin-bottom: 15px; color: #666; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .grid-item { 
+            background: white; padding: 20px; border-radius: 20px; 
+            text-decoration: none; color: inherit; text-align: center;
+            border: 1px solid #f0f2f5; transition: 0.2s;
+        }
+        .grid-item:active { background: #f0f4ff; transform: scale(0.97); }
+        .grid-item .icon { font-size: 30px; display: block; margin-bottom: 10px; }
+        .grid-item .label { font-size: 14px; font-weight: 800; line-height: 1.4; }
+
+        /* 뉴스 섹션 */
+        .news-section { background: white; border-radius: 25px; padding: 25px; margin-top: 25px; border: 1px solid #f0f2f5; }
+        .news-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #f8f9fa; }
+        .news-header h2 { font-size: 18px; color: var(--navy-deep); font-weight: 800; margin: 0; display: flex; align-items: center; }
+        .live-badge { background: #ff5252; color: white; font-size: 10px; padding: 3px 7px; border-radius: 4px; font-weight: 800; animation: blink 1.5s infinite; margin-left: 10px; }
+
+        .news-list { list-style: none; padding: 0; }
+        .news-item { padding: 15px 0; border-bottom: 1px solid #f8f9fa; }
+        .news-item a { text-decoration: none; color: #333; font-size: 14px; display: block; }
+        .news-date { font-size: 11px; color: #999; margin-top: 5px; display: block; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <div id="splash" class="splash">
+        <div class="splash-logo"><span>💼</span></div>
+        <div class="splash-title">고용24</div>
+        <div class="splash-sub">알기 쉬운 고용 정책 가이드</div>
+        <button class="start-btn" onclick="startApp()">시작하기</button>
+    </div>
+
+    <div id="mainContent">
+        <header class="header">
+            <div class="header-inner"><h1>고용24</h1></div>
+        </header>
+
+        <main class="container">
+            <section class="intro-section">
+                <p class="intro-tag">Employment24 Care Service</p>
+                <h2 class="welcome-title">일하는 당신의 내일을 위해<br><strong>고용24</strong>가 든든한 파트너가 됩니다.</h2>
+                <div class="intro-desc">
+                    <p>고용24는 복잡하고 까다로운 고용 정책을 누구나 쉽게 이해하고 혜택을 누릴 수 있도록 돕는 스마트 가이드 서비스입니다.</p>
+                </div>
+            </section>
+
+            <section class="menu-grid">
+                <p class="section-label">맞춤형 고용 서비스 센터</p>
+                <div class="grid-container">
+                    <a href="unemployment-check.html" class="grid-item"><span class="icon">✅</span><span class="label">실업급여<br>수급조건</span></a>
+                    <a href="unemployment-calc.html" class="grid-item"><span class="icon">🧮</span><span class="label">실업급여<br>모의계산</span></a>
+                    <a href="support-info.html" class="grid-item"><span class="icon">📋</span><span class="label">국민취업<br>지원제도</span></a>
+                    <a href="card-info.html" class="grid-item"><span class="icon">💳</span><span class="label">내일배움<br>카드 안내</span></a>
+                </div>
+            </section>
+
+            <section class="news-section">
+                <div class="news-header">
+                    <h2>고용관련 최신 뉴스 <span class="live-badge">LIVE</span></h2>
+                </div>
+                <div id="news-container">
+                    <p style="text-align: center; padding: 20px; color: #999;">최신 정보를 불러오고 있습니다...</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // 🚀 스플래시 시작 및 뒤로가기 방지 로직 통합
+        function startApp() {
+            const splash = document.getElementById('splash');
+            
+            // 1. 세션 저장 (재방문 시 스플래시 스킵용)
+            sessionStorage.setItem('emp_splash_viewed', 'true');
+            
+            // 2. 히스토리 조작 (뒤로가기 시 스플래시 다시 안 보게 함)
+            window.history.replaceState(null, null, window.location.href);
+
+            // 3. 애니메이션 및 요소 완전 제거
+            splash.classList.add('fade-out');
+            setTimeout(() => { 
+                splash.remove(); // DOM에서 아예 삭제
+                document.body.classList.remove('is-loading');
+            }, 500);
+        }
+
+        // 뉴스 가져오기 함수
+        async function fetchLiveNews() {
+            const container = document.getElementById('news-container');
+            const keywords = encodeURIComponent('실업급여 고용노동부 내일배움카드');
+            const rssUrl = `https://news.google.com/rss/search?q=${keywords}&hl=ko&gl=KR&ceid=KR:ko`;
+            const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+
+            try {
+                const res = await fetch(apiUrl);
+                const data = await res.json();
+                if (data.status === 'ok' && data.items.length > 0) {
+                    let html = '<ul class="news-list" style="list-style:none; padding:0; margin:0;">';
+                    data.items.slice(0, 6).forEach(item => {
+                        html += `
+                            <li class="news-item">
+                                <a href="${item.link}" target="_blank">
+                                    <strong>[뉴스]</strong> ${item.title}
+                                    <span class="news-date">${item.pubDate.split(' ')[0]}</span>
+                                </a>
+                            </li>`;
+                    });
+                    html += '</ul>';
+                    container.innerHTML = html;
+                }
+            } catch (e) {
+                container.innerHTML = '<p style="text-align:center; color:#999;">뉴스를 불러올 수 없습니다.</p>';
+            }
+        }
+
+        // 초기 실행
+        (function() {
+            fetchLiveNews();
+            // 이미 스플래시를 봤다면 즉시 제거
+            if (sessionStorage.getItem('emp_splash_viewed') === 'true') {
+                const splash = document.getElementById('splash');
+                if(splash) splash.remove();
+            }
+        })();
+    </script>
 </body>
 </html>
