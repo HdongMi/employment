@@ -27,9 +27,10 @@
     .result-icon { font-size: 50px; margin-bottom: 15px; }
     .result-title { font-size: 22px; font-weight: 800; margin-bottom: 15px; }
     .result-desc { font-size: 15px; line-height: 1.6; color: #666; margin-bottom: 25px; }
-    .retry-btn { background: #eee; color: #333; border: none; padding: 12px 25px; border-radius: 10px; font-weight: 700; cursor: pointer; }
-    
-    .home-link { display: inline-block; margin-top: 20px; color: var(--navy-deep); font-weight: 700; text-decoration: none; border-bottom: 1px solid var(--navy-deep); }
+    .retry-btn { background: var(--navy-deep); color: white; border: none; padding: 15px 35px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 12px rgba(26, 35, 126, 0.2); }
+    .retry-btn:active { transform: scale(0.97); }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
@@ -75,11 +76,8 @@
     </div>
 
     <div id="result-screen" class="result-card">
-      <div id="result-content">
-        </div>
+      <div id="result-content"></div>
       <button class="retry-btn" onclick="location.reload()">다시 확인하기</button>
-      <br>
-      <a href="index.html" class="home-link">홈으로 돌아가기</a>
     </div>
   </main>
 
