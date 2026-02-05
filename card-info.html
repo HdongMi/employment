@@ -9,14 +9,18 @@
   <style>
     .detail-card { background: white; padding: 25px; border-radius: 25px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #f0f2f5; }
     .detail-card h2 { font-size: 19px; color: var(--navy-deep); margin: 0 0 15px; display: flex; align-items: center; gap: 8px; }
-    .detail-card h3 { font-size: 16px; color: #333; margin: 15px 0 10px; border-left: 3px solid var(--navy-light); padding-left: 10px; }
     .detail-card p { font-size: 14.5px; line-height: 1.7; color: #555; margin: 0 0 10px; }
     
-    .benefit-box { background: #fff9eb; padding: 15px; border-radius: 15px; border: 1px solid #ffeeba; margin-top: 10px; }
-    .benefit-title { font-weight: 800; color: #856404; font-size: 15px; margin-bottom: 5px; display: block; }
-    
-    .apply-btn { display: block; width: 100%; padding: 20px; background: var(--navy-deep); color: white; text-align: center; text-decoration: none; border-radius: 18px; font-weight: 800; font-size: 17px; margin-top: 10px; box-shadow: 0 8px 20px rgba(26, 35, 126, 0.2); box-sizing: border-box; }
-    .apply-btn:active { transform: scale(0.98); }
+    .benefit-box { background: #fff9eb; padding: 18px; border-radius: 15px; border: 1px solid #ffeeba; margin: 10px 0 20px 0; }
+    .check-box { background: #fdfdfd; padding: 15px; border-radius: 15px; border: 1px solid #eee; margin-bottom: 20px; }
+
+    .apply-btn {
+        display: block; width: 100%; padding: 20px; background: #1a237e !important; color: white !important;
+        text-align: center; text-decoration: none; border-radius: 18px; font-weight: 800;
+        font-size: 17px; margin: 10px 0; box-shadow: 0 8px 20px rgba(26, 35, 126, 0.2);
+        box-sizing: border-box;
+    }
+    .apply-btn:active { transform: scale(0.98); opacity: 0.9; }
   </style>
 </head>
 <body>
@@ -28,28 +32,24 @@
 
   <main class="container">
     <section class="detail-card">
-      <h2><span>💳</span> 제도란?</h2>
-      <p>급격한 기술 발전에 적응하고 직업 능력 개발을 돕기 위해 <strong>국가에서 훈련비의 일부를 지원</strong>하는 카드입니다.</p>
-    </section>
-
-    <section class="detail-card">
-      <h2><span>🎁</span> 주요 혜택</h2>
-      <p>국민 누구나 신청 가능하며(일부 고소득자 등 제외), 한 번 발급으로 <strong>5년간</strong> 자유롭게 사용하실 수 있습니다.</p>
+      <h2><span>💳</span> 제도 소개</h2>
+      <p>5년간 사용할 수 있는 <strong>국가 훈련비 지원 카드</strong>입니다.</p>
       <div class="benefit-box">
-        <span class="benefit-title">💰 지원 한도</span>
-        <p style="margin:0; color:#856404;">기본 300만원 ~ 최대 500만원까지 지원</p>
+        <strong style="color:#856404;">지원금액:</strong> 기본 300만원 ~ 최대 500만원
       </div>
     </section>
 
     <section class="detail-card">
-      <h2><span>📝</span> 신청 방법</h2>
-      <p>가까운 고용센터를 방문하거나, 고용24 홈페이지를 통해 온라인으로 간편하게 신청할 수 있습니다.</p>
-      <a href="https://www.work24.go.kr" target="_blank" class="apply-btn">카드 발급 신청하기</a>
+      <h2><span>🚩</span> 제외 대상 확인</h2>
+      <div class="check-box">
+        <p style="font-size:13px; color:#666; margin:0;">공무원, 사립학교 교직원, 졸업까지 2년 초과 남은 재학생, 고소득 자영업자 등은 제외됩니다.</p>
+      </div>
     </section>
 
     <section class="detail-card">
-      <h2><span>🔍</span> 배울 수 있는 분야</h2>
-      <p>IT·코딩, 영상 편집, 조리·제과제빵, 바리스타, 회계, 디자인 등 고용노동부 승인 훈련 과정을 수강할 수 있습니다.</p>
+      <h2><span>📝</span> 신청 안내</h2>
+      <p>신분증과 계좌번호(농협/신한)를 준비해 주세요.</p>
+      <a href="https://www.work24.go.kr" target="_blank" class="apply-btn">카드 발급 신청하기</a>
     </section>
   </main>
 </body>
