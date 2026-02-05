@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>계산기 - 고용 알리미</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="back-btn">←</a>
+      <h1>실업급여 모의계산</h1>
+    </div>
+  </header>
+  <main class="container">
+    <div class="content-box">
+      <div class="input-group">
+        <label>퇴사 전 3개월 평균 월급 (원)</label>
+        <input type="number" id="salary" placeholder="예: 3000000">
+      </div>
+      <button class="calc-btn" onclick="calc()">예상 금액 확인</button>
+      <div id="result" class="result-box" style="display:none;">
+        <p style="margin-bottom:5px; color:#666;">예상 1일 지급액</p>
+        <strong id="amt" style="font-size:22px; color:var(--primary-dark);">0</strong>원
+      </div>
+    </div>
+  </main>
+  <script>
+    function calc() {
+      const s = document.getElementById('salary').value;
+      if(!s) return alert('월급을 입력해주세요.');
+      let daily = (s / 30) * 0.6;
+      if (daily > 66000) daily = 66000;
+      if (daily < 60120) daily = 60120;
+      document.getElementById('amt').innerText = Math.floor(daily).toLocaleString();
+      document.getElementById('result').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
