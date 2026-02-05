@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>실업급여 계산기</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <a href="index.html" class="back-btn">←</a>
+      <h1>실업급여 모의 계산</h1>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="content-box">
+      <label>퇴사 전 3개월 평균 월급</label>
+      <input type="number" id="salary" placeholder="예: 3000000">
+      
+      <label>고용보험 가입 기간 (개월)</label>
+      <input type="number" id="period" placeholder="예: 12">
+      
+      <button class="calc-btn" onclick="calculate()">계산하기</button>
+      
+      <div id="result" style="margin-top:20px; text-align:center; font-weight:bold; display:none;">
+        <p style="color:#666;">예상 1일 구직급여</p>
+        <span id="dailyAmount" style="font-size:24px; color:var(--primary-dark);">0</span>원
+      </div>
+    </div>
+  </main>
+
+  <script>
+    function calculate() {
+      const salary = document.getElementById('salary').value;
+      if(!salary) return alert('월급을 입력하세요');
+      
+      // 간단한 예시 로직 (평균임금의 60% 적용, 상한액 66,000원)
+      let daily = (salary / 30) * 0.6;
+      if (daily > 66000) daily = 66000;
+      if (daily < 60120) daily = 60120; // 하한액 기준 예시
+
+      document.getElementById('dailyAmount').innerText = Math.floor(daily).toLocaleString();
+      document.getElementById('result').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
