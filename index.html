@@ -6,59 +6,67 @@
   <title>고용24</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <div id="splash" class="splash">
+<body class="is-loading"> <div id="splash" class="splash">
     <div class="splash-logo"><span>💼</span></div>
     <div class="splash-title">고용24</div>
     <div class="splash-sub">알기 쉬운 고용 정책 가이드</div>
     <button class="start-btn" onclick="startApp()">시작하기</button>
   </div>
 
-  <header class="header">
-    <div class="header-inner">
-      <h1>고용24</h1>
-    </div>
-  </header>
-
-  <main class="container">
-    <div class="welcome-message">
-      일하는 당신을 위해<br><strong>고용24</strong>가 함께하겠습니다.
-    </div>
-
-    <section class="menu-grid">
-      <p class="section-label">맞춤형 고용 서비스</p>
-      <div class="grid-container">
-        <a href="unemployment-check.html" class="grid-item">
-          <span class="icon">✅</span>
-          <span class="label">실업급여<br>수급조건</span>
-        </a>
-        <a href="unemployment-calc.html" class="grid-item">
-          <span class="icon">🧮</span>
-          <span class="label">실업급여<br>모의계산</span>
-        </a>
-        <a href="support-info.html" class="grid-item">
-          <span class="icon">📋</span>
-          <span class="label">국민취업<br>지원제도</span>
-        </a>
-        <a href="card-info.html" class="grid-item">
-          <span class="icon">💳</span>
-          <span class="label">내일배움<br>카드 안내</span>
-        </a>
+  <div id="mainContent">
+    <header class="header">
+      <div class="header-inner">
+        <h1>고용24</h1>
       </div>
-    </section>
-  </main>
+    </header>
+
+    <main class="container">
+      <div class="welcome-message">
+        일하는 당신을 위해<br><strong>고용24</strong>가 함께하겠습니다.
+      </div>
+
+      <section class="menu-grid">
+        <p class="section-label">맞춤형 고용 서비스</p>
+        <div class="grid-container">
+          <a href="unemployment-check.html" class="grid-item">
+            <span class="icon">✅</span>
+            <span class="label">실업급여<br>수급조건</span>
+          </a>
+          <a href="unemployment-calc.html" class="grid-item">
+            <span class="icon">🧮</span>
+            <span class="label">실업급여<br>모의계산</span>
+          </a>
+          <a href="support-info.html" class="grid-item">
+            <span class="icon">📋</span>
+            <span class="label">국민취업<br>지원제도</span>
+          </a>
+          <a href="card-info.html" class="grid-item">
+            <span class="icon">💳</span>
+            <span class="label">내일배움<br>카드 안내</span>
+          </a>
+        </div>
+      </section>
+    </main>
+  </div>
 
   <script>
     function startApp() {
       const splash = document.getElementById('splash');
-      sessionStorage.setItem('emp_splash', 'true');
+      sessionStorage.setItem('emp_splash_viewed', 'true');
       splash.classList.add('fade-out');
-      setTimeout(() => { splash.remove(); }, 500);
+      
+      // 애니메이션 후 아예 DOM에서 제거하여 메인과 겹치지 않게 함
+      setTimeout(() => { 
+        splash.style.display = 'none';
+        document.body.classList.remove('is-loading');
+      }, 500);
     }
+
     (function() {
-      if (sessionStorage.getItem('emp_splash') === 'true') {
-        const splash = document.getElementById('splash');
-        if(splash) splash.style.display = 'none';
+      // 이미 봤다면 스플래시 즉시 제거
+      if (sessionStorage.getItem('emp_splash_viewed') === 'true') {
+        document.getElementById('splash').style.display = 'none';
+        document.body.classList.remove('is-loading');
       }
     })();
   </script>
