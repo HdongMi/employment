@@ -3,25 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>내일배움카드 - 고용 알리미</title>
+  <title>내일배움카드 - 고용24</title>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquareRound@master/nanumsquareround.min.css">
   <link rel="stylesheet" href="style.css">
+  <style>
+    .detail-card { background: white; padding: 25px; border-radius: 25px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #f0f2f5; }
+    .detail-card h2 { font-size: 19px; color: var(--navy-deep); margin: 0 0 15px; display: flex; align-items: center; gap: 8px; }
+    .detail-card h3 { font-size: 16px; color: #333; margin: 15px 0 10px; border-left: 3px solid var(--navy-light); padding-left: 10px; }
+    .detail-card p { font-size: 14.5px; line-height: 1.7; color: #555; margin: 0 0 10px; }
+    
+    .benefit-box { background: #fff9eb; padding: 15px; border-radius: 15px; border: 1px solid #ffeeba; margin-top: 10px; }
+    .benefit-title { font-weight: 800; color: #856404; font-size: 15px; margin-bottom: 5px; display: block; }
+    
+    .apply-btn { display: block; width: 100%; padding: 20px; background: var(--navy-deep); color: white; text-align: center; text-decoration: none; border-radius: 18px; font-weight: 800; font-size: 17px; margin-top: 10px; box-shadow: 0 8px 20px rgba(26, 35, 126, 0.2); box-sizing: border-box; }
+    .apply-btn:active { transform: scale(0.98); }
+  </style>
 </head>
 <body>
   <header class="header">
-    <div class="header-inner">
-      <a href="index.html" class="back-btn">←</a>
-      <h1>국민내일배움카드</h1>
+    <div class="header-inner" style="justify-content: center;">
+      <h1>국민내일배움카드 안내</h1>
     </div>
   </header>
+
   <main class="container">
-    <div class="content-box">
-      <h2>카드 소개</h2>
-      <p>급격한 기술 발전에 적응하고 직업능력을 개발할 수 있도록 국가에서 훈련비의 일부를 지원하는 카드입니다.</p>
-    </div>
-    <div class="content-box">
-      <h2>지원 한도</h2>
-      <p>기본 300~500만원까지 지원되며, 유효기간은 계좌 발급일로부터 5년입니다.</p>
-    </div>
+    <section class="detail-card">
+      <h2><span>💳</span> 제도란?</h2>
+      <p>급격한 기술 발전에 적응하고 직업 능력 개발을 돕기 위해 <strong>국가에서 훈련비의 일부를 지원</strong>하는 카드입니다.</p>
+    </section>
+
+    <section class="detail-card">
+      <h2><span>🎁</span> 주요 혜택</h2>
+      <p>국민 누구나 신청 가능하며(일부 고소득자 등 제외), 한 번 발급으로 <strong>5년간</strong> 자유롭게 사용하실 수 있습니다.</p>
+      <div class="benefit-box">
+        <span class="benefit-title">💰 지원 한도</span>
+        <p style="margin:0; color:#856404;">기본 300만원 ~ 최대 500만원까지 지원</p>
+      </div>
+    </section>
+
+    <section class="detail-card">
+      <h2><span>📝</span> 신청 방법</h2>
+      <p>가까운 고용센터를 방문하거나, 고용24 홈페이지를 통해 온라인으로 간편하게 신청할 수 있습니다.</p>
+      <a href="https://www.work24.go.kr" target="_blank" class="apply-btn">카드 발급 신청하기</a>
+    </section>
+
+    <section class="detail-card">
+      <h2><span>🔍</span> 배울 수 있는 분야</h2>
+      <p>IT·코딩, 영상 편집, 조리·제과제빵, 바리스타, 회계, 디자인 등 고용노동부 승인 훈련 과정을 수강할 수 있습니다.</p>
+    </section>
   </main>
 </body>
 </html>
