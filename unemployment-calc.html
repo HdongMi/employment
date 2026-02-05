@@ -7,7 +7,13 @@
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquareRound@master/nanumsquareround.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    /* 계산기 전용 추가 스타일 */
+    /* 화살표(스피너) 제거를 위한 스타일 */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
     .calc-container {
         background: white;
         padding: 30px 20px;
@@ -31,7 +37,7 @@
 
     .input-wrapper input {
         width: 100%;
-        padding: 18px 20px;
+        padding: 18px 60px 18px 20px; /* 오른쪽 원 글자 겹침 방지 */
         font-size: 20px;
         font-weight: 700;
         border: 2px solid #edf0f5;
@@ -55,7 +61,8 @@
         top: 50%;
         transform: translateY(-50%);
         font-weight: 700;
-        color: #999;
+        color: #333;
+        font-size: 18px;
     }
 
     .calc-btn {
@@ -72,12 +79,8 @@
         transition: 0.2s;
     }
 
-    .calc-btn:active {
-        transform: scale(0.97);
-        opacity: 0.9;
-    }
+    .calc-btn:active { transform: scale(0.97); opacity: 0.9; }
 
-    /* 결과 대시보드 스타일 */
     .result-dashboard {
         display: none;
         margin-top: 35px;
@@ -88,44 +91,15 @@
         animation: slideUp 0.5s ease-out;
     }
 
-    .result-item {
-        text-align: center;
-        margin-bottom: 20px;
-    }
+    .result-item { text-align: center; margin-bottom: 20px; }
+    .result-label { font-size: 13px; color: #777; margin-bottom: 8px; display: block; }
+    .result-value { font-size: 28px; font-weight: 800; color: var(--navy-deep); }
+    .result-value span { font-size: 16px; margin-left: 4px; color: #333; }
+    
+    .info-tip { margin-top: 25px; font-size: 12px; color: #999; line-height: 1.6; text-align: center; }
 
-    .result-item:last-child { margin-bottom: 0; }
-
-    .result-label {
-        font-size: 13px;
-        color: #777;
-        margin-bottom: 8px;
-        display: block;
-    }
-
-    .result-value {
-        font-size: 28px;
-        font-weight: 800;
-        color: var(--navy-deep);
-    }
-
-    .result-value span {
-        font-size: 16px;
-        margin-left: 4px;
-        color: #333;
-    }
-
-    .info-tip {
-        margin-top: 25px;
-        font-size: 12px;
-        color: #999;
-        line-height: 1.6;
-        text-align: center;
-    }
-
-    @keyframes slideUp {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 <body>
@@ -140,7 +114,7 @@
       <div class="input-group">
         <span class="input-label">평균 월 급여</span>
         <div class="input-wrapper">
-          <input type="number" id="salary" placeholder="최근 3개월 평균" inputmode="numeric">
+          <input type="text" id="salary" placeholder="최근 3개월 평균" inputmode="numeric" oninput="formatNumber(this)">
           <span class="unit">원</span>
         </div>
       </div>
@@ -157,31 +131,35 @@
           <span class="result-label">한 달 기준 (30일)</span>
           <div class="result-value" style="font-size: 22px; color: var(--navy-light);"><strong id="monthAmt">0</strong><span>원</span></div>
         </div>
-        
         <p class="info-tip">
           * 실제 수급액은 가입 기간 및 연령에 따라 다를 수 있습니다.<br>
           * 2026년 기준 하한액/상한액이 적용된 결과입니다.
         </p>
       </div>
     </div>
-
-    <div style="text-align: center; margin-top: 30px;">
-        <a href="index.html" style="color: var(--navy-light); font-weight: 700; text-decoration: none; font-size: 15px; border-bottom: 1px solid var(--navy-light);">홈으로 돌아가기</a>
-    </div>
   </main>
 
   <script>
+    // 입력창 콤마 자동 생성 함수
+    function formatNumber(obj) {
+        let value = obj.value.replace(/[^0-9]/g, ""); // 숫자 외 제거
+        if (value.length > 0) {
+            obj.value = Number(value).toLocaleString(); // 3자리마다 콤마
+        } else {
+            obj.value = "";
+        }
+    }
+
     function calculate() {
-      const s = document.getElementById('salary').value;
+      // 계산 시에는 콤마를 제거한 숫자형 데이터로 변환
+      const s = document.getElementById('salary').value.replace(/,/g, "");
+      
       if(!s || s <= 0) {
         alert('올바른 급여를 입력해주세요.');
         return;
       }
 
-      // 1일 구직급여 산출 로직 (평균임금의 60%)
-      let daily = (s / 30) * 0.6;
-      
-      // 상한액 및 하한액 설정 (예시 기준)
+      let daily = (Number(s) / 30) * 0.6;
       const maxDaily = 66000;
       const minDaily = 60120;
 
@@ -190,14 +168,9 @@
 
       const monthly = daily * 30;
 
-      // 숫자 카운트 애니메이션 효과 (선택사항이지만 시각적으로 좋음)
       document.getElementById('amt').innerText = Math.floor(daily).toLocaleString();
       document.getElementById('monthAmt').innerText = Math.floor(monthly).toLocaleString();
-      
-      // 결과창 노출
       document.getElementById('result').style.display = 'block';
-      
-      // 계산 완료 후 버튼 텍스트 변경
       document.querySelector('.calc-btn').innerText = '다시 계산하기';
     }
   </script>
