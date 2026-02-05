@@ -7,89 +7,23 @@
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquareRound@master/nanumsquareround.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    /* 서브페이지 전용 추가 스타일 */
-    .detail-card {
-        background: white;
-        padding: 25px;
-        border-radius: 25px;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-        border: 1px solid #f0f2f5;
-    }
-    .detail-card h2 {
-        font-size: 19px;
-        color: var(--navy-deep);
-        margin-top: 0;
-        margin-bottom: 15px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .detail-card h3 {
-        font-size: 16px;
-        color: #333;
-        margin: 15px 0 10px;
-        border-left: 3px solid var(--navy-light);
-        padding-left: 10px;
-    }
-    .detail-card p {
-        font-size: 14.5px;
-        line-height: 1.7;
-        color: #555;
-        margin: 0 0 10px;
-    }
+    .detail-card { background: white; padding: 25px; border-radius: 25px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #f0f2f5; }
+    .detail-card h2 { font-size: 19px; color: var(--navy-deep); margin: 0 0 15px; display: flex; align-items: center; gap: 8px; }
+    .detail-card h3 { font-size: 16px; color: #333; margin: 15px 0 10px; border-left: 3px solid var(--navy-light); padding-left: 10px; }
+    .detail-card p { font-size: 14.5px; line-height: 1.7; color: #555; margin: 0 0 10px; }
     
-    /* 절차 타임라인 스타일 */
-    .step-list {
-        margin-top: 15px;
-        border-left: 2px dashed #ddd;
-        padding-left: 20px;
-        margin-left: 10px;
-    }
-    .step-item {
-        position: relative;
-        margin-bottom: 20px;
-    }
-    .step-item::before {
-        content: "";
-        position: absolute;
-        left: -26px;
-        top: 5px;
-        width: 10px;
-        height: 10px;
-        background: var(--navy-light);
-        border-radius: 50%;
-    }
-    .step-title {
-        font-weight: 800;
-        font-size: 15px;
-        color: var(--navy-deep);
-        margin-bottom: 4px;
-    }
+    .step-list { margin: 15px 0 25px 10px; border-left: 2px dashed #ddd; padding-left: 20px; }
+    .step-item { position: relative; margin-bottom: 20px; }
+    .step-item::before { content: ""; position: absolute; left: -26px; top: 5px; width: 10px; height: 10px; background: var(--navy-light); border-radius: 50%; }
+    .step-title { font-weight: 800; font-size: 15px; color: var(--navy-deep); margin-bottom: 4px; }
 
-    /* 강조 박스 */
-    .info-box {
-        background: #f8faff;
-        padding: 15px;
-        border-radius: 12px;
-        font-size: 14px;
-        color: #444;
-    }
+    .info-box { background: #f8faff; padding: 15px; border-radius: 12px; font-size: 14px; color: #444; }
 
-    /* 메인 버튼 */
     .apply-btn {
-        display: block;
-        width: 100%;
-        padding: 20px;
-        background: var(--navy-deep);
-        color: white;
-        text-align: center;
-        text-decoration: none;
-        border-radius: 18px;
-        font-weight: 800;
-        font-size: 17px;
-        margin-top: 30px;
-        box-shadow: 0 8px 20px rgba(26, 35, 126, 0.2);
+        display: block; width: 100%; padding: 20px; background: var(--navy-deep); color: white;
+        text-align: center; text-decoration: none; border-radius: 18px; font-weight: 800;
+        font-size: 17px; margin-top: 10px; box-shadow: 0 8px 20px rgba(26, 35, 126, 0.2);
+        box-sizing: border-box;
     }
     .apply-btn:active { transform: scale(0.98); }
   </style>
@@ -108,53 +42,26 @@
     </section>
 
     <section class="detail-card">
-      <h2><span>👥</span> 지원 대상</h2>
-      <h3>Ⅰ유형 (구직촉진수당+취업지원)</h3>
-      <p>요건심사형: 15~69세 구직자 중 가구단위 중위소득 60% 이하 & 재산 4억원 이하</p>
-      <h3>Ⅱ유형 (취업활동비용+취업지원)</h3>
-      <p>특수형태근로종사자, 영세 자영업자, 청년(18~34세), 중장년 등 취업취약계층</p>
-    </section>
-
-    <section class="detail-card">
-      <h2><span>💰</span> 지원 내용</h2>
-      <div class="info-box">
-        <strong>구직촉진수당:</strong> 월 50만원 × 6개월 (최대 300만원)<br>
-        * 부양가족 1인당 10만원씩 추가 지원 (최대 40만원)<br><br>
-        <strong>취업성공수당:</strong> 취업 후 장기 근속 시 최대 150만원 지원
-      </div>
-    </section>
-
-    <section class="detail-card">
       <h2><span>🚀</span> 신청 및 절차</h2>
       <div class="step-list">
-        <div class="step-item">
-          <div class="step-title">01. 신청</div>
-          <p>워크넷 구직등록 및 고용24 온라인 신청</p>
-        </div>
-        <div class="step-item">
-          <div class="step-title">02. 수급자격 결정</div>
-          <p>신청일로부터 1개월 이내 서면 통지</p>
-        </div>
-        <div class="step-item">
-          <div class="step-title">03. 취업활동계획 수립</div>
-          <p>진로상담 및 고용센터 담당자와 상담</p>
-        </div>
-        <div class="step-item">
-          <div class="step-title">04. 구직활동 및 수당지급</div>
-          <p>계획에 따른 활동 이행 및 수당 청구</p>
-        </div>
+        <div class="step-item"><div class="step-title">01. 신청</div><p>워크넷 구직등록 및 고용24 온라인 신청</p></div>
+        <div class="step-item"><div class="step-title">02. 수급자격 결정</div><p>신청일로부터 1개월 이내 서면 통지</p></div>
+        <div class="step-item"><div class="step-title">03. 취업활동계획 수립</div><p>진로상담 및 고용센터 담당자와 상담</p></div>
+        <div class="step-item"><div class="step-title">04. 구직활동 및 수당지급</div><p>계획에 따른 활동 이행 및 수당 청구</p></div>
       </div>
-      
       <a href="https://www.work24.go.kr" target="_blank" class="apply-btn">지금 바로 지원하러 가기</a>
     </section>
 
     <section class="detail-card">
-      <h2><span>🛠</span> 취업지원 및 일 경험</h2>
+      <h2><span>🛠</span> 주요 프로그램</h2>
       <h3>취업지원 프로그램</h3>
       <p>심리상담, 직업훈련, 이력서 클리닉, 면접 코칭 등 맞춤형 서비스 제공</p>
       <h3>일 경험 프로그램</h3>
-      <p><strong>체험형:</strong> 단기(30일 내외) 직무 체험<br><strong>인턴형:</strong> 최대 3개월간 실무 수행 및 취업 연계</p>
+      <p><strong>체험형:</strong> 단기 직무 체험(30일 내외)<br><strong>인턴형:</strong> 최대 3개월 실무 및 취업 연계</p>
     </section>
-  </main>
-</body>
-</html>
+
+    <section class="detail-card">
+      <h2><span>👥</span> 지원 유형</h2>
+      <div class="info-box">
+        <strong>Ⅰ유형:</strong> 요건심사형 중위소득 60% 이하 (구직촉진수당 제공)<br>
+        <strong>Ⅱ유형:</strong> 청년, 중장년 등 취업취약계
