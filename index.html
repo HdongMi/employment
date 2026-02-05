@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>고용 알리미 - 시그니처</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="loading">
+
+  <div id="splash" class="splash">
+    <div class="splash-logo"><span>💼</span></div>
+    <div class="splash-title">고용 알리미</div>
+    <div class="splash-sub">실업급여부터 내일배움카드까지</div>
+    <button class="start-btn" onclick="startApp()">시작하기</button>
+  </div>
+
+  <div id="mainLayout">
+    <header class="header">
+      <div class="header-inner">
+        <h1>고용 정책 가이드</h1>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="menu-list">
+        <p class="section-label">필요한 서비스를 선택하세요</p>
+        
+        <a href="unemployment-check.html" class="list-item">
+          <span class="label">✅ 실업급여 수급조건 확인</span>
+          <span class="arrow">›</span>
+        </a>
+
+        <a href="unemployment-calc.html" class="list-item">
+          <span class="label">🧮 실업급여 모의 계산기</span>
+          <span class="arrow">›</span>
+        </a>
+
+        <a href="support-info.html" class="list-item">
+          <span class="label">📋 국민취업지원제도 안내</span>
+          <span class="arrow">›</span>
+        </a>
+
+        <a href="card-info.html" class="list-item">
+          <span class="label">💳 국민내일배움카드 활용</span>
+          <span class="arrow">›</span>
+        </a>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    function startApp() {
+      const splash = document.getElementById('splash');
+      sessionStorage.setItem('employment_splash', 'true');
+      splash.classList.add('fade-out');
+      setTimeout(() => {
+        splash.remove();
+        document.body.classList.remove('loading');
+      }, 500);
+    }
+
+    (function() {
+      if (sessionStorage.getItem('employment_splash') === 'true') {
+        document.getElementById('splash').style.display = 'none';
+        document.body.classList.remove('loading');
+      }
+    })();
+  </script>
+</body>
+</html>
