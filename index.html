@@ -7,58 +7,43 @@
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquareRound@master/nanumsquareround.min.css">
   <link rel="stylesheet" href="style.css">
   <style>
-    /* 뉴스 섹션 전용 스타일 (기존 디자인을 해치지 않도록 설계) */
     .news-section {
-      background: white;
-      border-radius: 25px;
-      padding: 20px;
-      margin: 25px 0; /* 버튼 그리드 아래에 적절한 간격 */
-      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-      border: 1px solid #f0f2f5;
+      background: white; border-radius: 25px; padding: 25px;
+      margin: 25px 0 50px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #f0f2f5;
     }
     .news-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid #f8f9fa;
     }
-    .news-header h2 {
-      font-size: 16px;
-      color: var(--navy-deep);
-      font-weight: 800;
-      margin: 0;
+
+    /* 🛠 [수정] 제목과 배지를 세로 가운데 정렬 */
+    .news-header h2 { 
+      font-size: 18px; 
+      color: var(--navy-deep); 
+      font-weight: 800; 
+      margin: 0; 
+      display: flex; 
+      align-items: center; /* 세로축 중앙 정렬 */
     }
+
+    /* 🛠 [수정] 배지 위치 및 간격 미세 조정 */
     .live-badge {
-      background: #ff5252;
-      color: white;
-      font-size: 9px;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-weight: 800;
-      animation: blink 1.5s infinite;
+      background: #ff5252; color: white; font-size: 10px; padding: 3px 7px;
+      border-radius: 4px; font-weight: 800; animation: blink 1.5s infinite;
+      margin-left: 10px; /* 제목과의 간격 확보 */
+      margin-top: 1px;  /* 시각적 보정을 위해 살짝 내림 (폰트마다 다를 수 있음) */
+      line-height: 1;    /* 배지 내부 텍스트 정렬 */
     }
+
     .news-list { list-style: none; padding: 0; margin: 0; }
-    .news-item {
-      padding: 12px 0;
-      border-bottom: 1px solid #f8f9fa;
-    }
+    .news-item { padding: 18px 0; border-bottom: 1px solid #f8f9fa; transition: background 0.2s; }
+    .news-item:active { background: #f5f7ff; border-radius: 12px; }
     .news-item:last-child { border-bottom: none; }
-    .news-item a {
-      text-decoration: none;
-      color: #333;
-      font-size: 14px;
-      line-height: 1.5;
-      display: block;
-      font-weight: 500;
-    }
-    .news-date {
-      font-size: 11px;
-      color: #aaa;
-      margin-top: 6px;
-      display: block;
-    }
+    .news-item a { text-decoration: none; color: #333; font-size: 15px; line-height: 1.6; display: block; font-weight: 500; }
+    .news-item a strong { color: #1a237e; margin-right: 6px; font-weight: 800; }
+    .news-date { font-size: 12px; color: #999; margin-top: 8px; display: block; }
     @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-    .loading-text { font-size: 13px; color: #999; text-align: center; padding: 10px 0; }
+    .loading-text { font-size: 14px; color: #999; text-align: center; padding: 40px 0; }
   </style>
 </head>
 <body class="is-loading">
@@ -71,61 +56,40 @@
 
   <div id="mainContent">
     <header class="header">
-      <div class="header-inner">
-        <h1>고용24</h1>
-      </div>
+      <div class="header-inner"><h1>고용24</h1></div>
     </header>
 
     <main class="container">
       <section class="intro-section">
         <p class="intro-tag">Employment24 Care Service</p>
-        <h2 class="welcome-title">
-          일하는 당신의 내일을 위해<br>
-          <strong>고용24</strong>가 든든한 파트너가 됩니다.
-        </h2>
+        <h2 class="welcome-title">일하는 당신의 내일을 위해<br><strong>고용24</strong>가 든든한 파트너가 됩니다.</h2>
         <div class="intro-desc">
-          <p>고용24는 복잡하고 까다로운 고용 정책을 누구나 쉽게 이해하고 </p>
-          <p>혜택을 누릴 수 있도록 돕는 스마트 가이드 서비스입니다.</p>
-          <p>갑작스러운 실업으로 인한 <strong>실업급여</strong> 수급부터, <strong>국민내일배움카드</strong>, <strong>국민취업지원제도</strong>까지. </p>
-          <p>당신에게 꼭 필요한 정보를 한곳에서 확인하세요.</p>
+          <p>고용24는 복잡하고 까다로운 고용 정책을 누구나 쉽게 이해하고 혜택을 누릴 수 있도록 돕는 스마트 가이드 서비스입니다.</p>
         </div>
       </section>
 
       <section class="menu-grid">
         <p class="section-label">맞춤형 고용 서비스 센터</p>
         <div class="grid-container">
-          <a href="unemployment-check.html" class="grid-item">
-            <span class="icon">✅</span>
-            <span class="label">실업급여<br>수급조건</span>
-          </a>
-          <a href="unemployment-calc.html" class="grid-item">
-            <span class="icon">🧮</span>
-            <span class="label">실업급여<br>모의계산</span>
-          </a>
-          <a href="support-info.html" class="grid-item">
-            <span class="icon">📋</span>
-            <span class="label">국민취업<br>지원제도</span>
-          </a>
-          <a href="card-info.html" class="grid-item">
-            <span class="icon">💳</span>
-            <span class="label">내일배움<br>카드 안내</span>
-          </a>
+          <a href="unemployment-check.html" class="grid-item"><span class="icon">✅</span><span class="label">실업급여<br>수급조건</span></a>
+          <a href="unemployment-calc.html" class="grid-item"><span class="icon">🧮</span><span class="label">실업급여<br>모의계산</span></a>
+          <a href="support-info.html" class="grid-item"><span class="icon">📋</span><span class="label">국민취업<br>지원제도</span></a>
+          <a href="card-info.html" class="grid-item"><span class="icon">💳</span><span class="label">내일배움<br>카드 안내</span></a>
         </div>
       </section>
 
       <section class="news-section">
         <div class="news-header">
-          <h2>최신 고용 뉴스 <span class="live-badge">LIVE</span></h2>
+          <h2>고용관련 최신 뉴스 <span class="live-badge">LIVE</span></h2>
         </div>
         <div id="news-container">
-          <p class="loading-text">최신 정보를 불러오는 중...</p>
+          <p class="loading-text">최신 정보를 불러오고 있습니다...</p>
         </div>
       </section>
     </main>
   </div>
 
   <script>
-    // 스플래시 제어 로직 (원본 유지)
     function startApp() {
       const splash = document.getElementById('splash');
       sessionStorage.setItem('emp_splash_viewed', 'true');
@@ -136,7 +100,6 @@
       }, 500);
     }
 
-    // 뉴스 가져오기 기능
     async function fetchLiveNews() {
       const container = document.getElementById('news-container');
       const keywords = encodeURIComponent('실업급여 국민내일배움카드 국민취업지원제도');
@@ -146,22 +109,37 @@
       try {
         const res = await fetch(apiUrl);
         const data = await res.json();
-        if (data.status === 'ok') {
+        
+        if (data.status === 'ok' && data.items.length > 0) {
+          const sortedItems = data.items.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+
           let html = '<ul class="news-list">';
-          data.items.slice(0, 3).forEach(item => {
-            const date = new Date(item.pubDate).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric' });
-            html += `<li class="news-item"><a href="${item.link}" target="_blank"><strong>[공지]</strong> ${item.title} <span class="news-date">${date}</span></a></li>`;
+          sortedItems.slice(0, 10).forEach(item => {
+            const pubDate = new Date(item.pubDate);
+            const dateString = pubDate.toLocaleDateString('ko-KR', { 
+              month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+            });
+            
+            html += `
+              <li class="news-item">
+                <a href="${item.link}" target="_blank" rel="noopener noreferrer">
+                  <strong>[뉴스]</strong> ${item.title}
+                  <span class="news-date">${dateString}</span>
+                </a>
+              </li>`;
           });
           html += '</ul>';
           container.innerHTML = html;
+        } else {
+          container.innerHTML = '<p class="loading-text">현재 새로운 뉴스가 없습니다.</p>';
         }
       } catch (e) {
-        container.innerHTML = '<p class="loading-text">뉴스를 불러올 수 없습니다.</p>';
+        container.innerHTML = '<p class="loading-text">데이터를 불러오는 중 오류가 발생했습니다.</p>';
       }
     }
 
     (function() {
-      fetchLiveNews(); // 뉴스 실행
+      fetchLiveNews();
       if (sessionStorage.getItem('emp_splash_viewed') === 'true') {
         const splash = document.getElementById('splash');
         if(splash) splash.style.display = 'none';
