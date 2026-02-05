@@ -3,29 +3,113 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>수급조건 - 고용 알리미</title>
+  <title>수급조건 확인 - 고용24</title>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquareRound@master/nanumsquareround.min.css">
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* 체크리스트 전용 추가 스타일 */
+    .step-box { display: none; animation: fadeIn 0.5s; }
+    .step-box.active { display: block; }
+    
+    .question-card { background: white; padding: 30px 20px; border-radius: 25px; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
+    .question-text { font-size: 19px; font-weight: 700; line-height: 1.5; margin-bottom: 25px; color: #111; }
+    
+    .btn-group { display: flex; gap: 10px; }
+    .choice-btn { flex: 1; padding: 18px; border-radius: 15px; border: 2px solid #eee; background: white; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .choice-btn:active { background: #f5f6ff; transform: scale(0.98); }
+    .choice-btn.yes { color: var(--navy-deep); border-color: var(--navy-deep); }
+    .choice-btn.no { color: #888; }
+
+    .progress-bar { width: 100%; height: 6px; background: #eee; border-radius: 10px; margin-bottom: 30px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--navy-deep); width: 33%; transition: 0.3s; }
+
+    .result-card { display: none; text-align: center; padding: 40px 20px; background: white; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    .result-icon { font-size: 50px; margin-bottom: 15px; }
+    .result-title { font-size: 22px; font-weight: 800; margin-bottom: 15px; }
+    .result-desc { font-size: 15px; line-height: 1.6; color: #666; margin-bottom: 25px; }
+    .retry-btn { background: #eee; color: #333; border: none; padding: 12px 25px; border-radius: 10px; font-weight: 700; cursor: pointer; }
+    
+    .home-link { display: inline-block; margin-top: 20px; color: var(--navy-deep); font-weight: 700; text-decoration: none; border-bottom: 1px solid var(--navy-deep); }
+  </style>
 </head>
 <body>
   <header class="header">
-    <div class="header-inner">
-      <a href="index.html" class="back-btn">←</a>
-      <h1>실업급여 수급조건</h1>
+    <div class="header-inner" style="justify-content: center;">
+      <h1>실업급여 수급 자격 확인</h1>
     </div>
   </header>
+
   <main class="container">
-    <div class="content-box">
-      <h2>1. 피보험 단위기간 확인</h2>
-      <p>이직(퇴사) 전 18개월 동안 고용보험 가입 기간이 <strong>통산 180일 이상</strong>이어야 합니다.</p>
+    <div id="quiz-container">
+      <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+      <div class="step-box active" id="step1">
+        <div class="question-card">
+          <p class="question-text">현재 고용보험에<br>가입되어 있으신가요?</p>
+          <div class="btn-group">
+            <button class="choice-btn no" onclick="showResult(false)">아니오</button>
+            <button class="choice-btn yes" onclick="nextStep(2)">예</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-box" id="step2">
+        <div class="question-card">
+          <p class="question-text">퇴사 전 18개월간<br>근무일수가 180일 이상인가요?</p>
+          <div class="btn-group">
+            <button class="choice-btn no" onclick="showResult(false)">아니오</button>
+            <button class="choice-btn yes" onclick="nextStep(3)">예</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="step-box" id="step3">
+        <div class="question-card">
+          <p class="question-text">본인의 의사가 아닌<br>비자발적 퇴사인가요?</p>
+          <div class="btn-group">
+            <button class="choice-btn no" onclick="showResult(false)">아니오</button>
+            <button class="choice-btn yes" onclick="showResult(true)">예</button>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="content-box">
-      <h2>2. 이직 사유 (중요)</h2>
-      <p>근로 의사와 능력이 있음에도 불구하고 <strong>비자발적으로 이직</strong>한 경우여야 합니다. (권고사직, 계약만료, 정년퇴직 등)</p>
-    </div>
-    <div class="content-box">
-      <h2>3. 재취업 노력</h2>
-      <p>실업 상태에서 적극적으로 재취업 활동을 하고 있음을 증명해야 합니다.</p>
+
+    <div id="result-screen" class="result-card">
+      <div id="result-content">
+        </div>
+      <button class="retry-btn" onclick="location.reload()">다시 확인하기</button>
+      <br>
+      <a href="index.html" class="home-link">홈으로 돌아가기</a>
     </div>
   </main>
+
+  <script>
+    function nextStep(step) {
+      document.querySelectorAll('.step-box').forEach(box => box.classList.remove('active'));
+      document.getElementById('step' + step).classList.add('active');
+      document.getElementById('progress').style.width = (step * 33.3) + '%';
+    }
+
+    function showResult(isEligible) {
+      document.getElementById('quiz-container').style.display = 'none';
+      const screen = document.getElementById('result-screen');
+      const content = document.getElementById('result-content');
+      screen.style.display = 'block';
+
+      if(isEligible) {
+        content.innerHTML = `
+          <div class="result-icon">🎉</div>
+          <h2 class="result-title" style="color:var(--navy-deep)">수급 가능성이 높습니다!</h2>
+          <p class="result-desc">입력하신 정보를 바탕으로 볼 때, 실업급여 수급 조건을 충족하실 가능성이 큽니다. 정확한 판정을 위해 거주지 관할 고용센터를 방문해 주세요.</p>
+        `;
+      } else {
+        content.innerHTML = `
+          <div class="result-icon">📢</div>
+          <h2 class="result-title" style="color:#d32f2f">확인이 필요합니다.</h2>
+          <p class="result-desc">아쉽게도 실업급여 수급 조건을 충족하지 못할 가능성이 있습니다. 예외적인 상황(질병, 강제 이직 등)이 있을 수 있으니 상세 상담을 권장합니다.</p>
+        `;
+      }
+    }
+  </script>
 </body>
 </html>
