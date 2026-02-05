@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>고용24</title>
+  <title>고용24 - 스마트 정책 가이드</title>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquareRound@master/nanumsquareround.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="is-loading"> <div id="splash" class="splash">
+<body class="is-loading">
+  <div id="splash" class="splash">
     <div class="splash-logo"><span>💼</span></div>
     <div class="splash-title">고용24</div>
     <div class="splash-sub">알기 쉬운 고용 정책 가이드</div>
@@ -21,12 +23,20 @@
     </header>
 
     <main class="container">
-      <div class="welcome-message">
-        일하는 당신을 위해<br><strong>고용24</strong>가 함께하겠습니다.
-      </div>
+      <section class="intro-section">
+        <p class="intro-tag">Employment24 Care Service</p>
+        <h2 class="welcome-title">
+          일하는 당신의 내일을 위해<br>
+          <strong>고용24</strong>가 든든한 파트너가 됩니다.
+        </h2>
+        <div class="intro-desc">
+          <p>고용24는 복잡하고 까다로운 고용 정책을 누구나 쉽게 이해하고 혜택을 누릴 수 있도록 돕는 스마트 가이드 서비스입니다.</p>
+          <p>갑작스러운 실업으로 인한 <strong>실업급여</strong> 수급부터, <strong>국민내일배움카드</strong>, <strong>국민취업지원제도</strong>까지. 당신에게 꼭 필요한 정보를 한곳에서 확인하세요.</p>
+        </div>
+      </section>
 
       <section class="menu-grid">
-        <p class="section-label">맞춤형 고용 서비스</p>
+        <p class="section-label">맞춤형 고용 서비스 센터</p>
         <div class="grid-container">
           <a href="unemployment-check.html" class="grid-item">
             <span class="icon">✅</span>
@@ -54,18 +64,15 @@
       const splash = document.getElementById('splash');
       sessionStorage.setItem('emp_splash_viewed', 'true');
       splash.classList.add('fade-out');
-      
-      // 애니메이션 후 아예 DOM에서 제거하여 메인과 겹치지 않게 함
       setTimeout(() => { 
         splash.style.display = 'none';
         document.body.classList.remove('is-loading');
       }, 500);
     }
-
     (function() {
-      // 이미 봤다면 스플래시 즉시 제거
       if (sessionStorage.getItem('emp_splash_viewed') === 'true') {
-        document.getElementById('splash').style.display = 'none';
+        const splash = document.getElementById('splash');
+        if(splash) splash.style.display = 'none';
         document.body.classList.remove('is-loading');
       }
     })();
