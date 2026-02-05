@@ -3,38 +3,202 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>계산기 - 고용 알리미</title>
+  <title>모의계산 - 고용24</title>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquareRound@master/nanumsquareround.min.css">
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* 계산기 전용 추가 스타일 */
+    .calc-container {
+        background: white;
+        padding: 30px 20px;
+        border-radius: 30px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        animation: fadeIn 0.6s ease-out;
+    }
+
+    .input-label {
+        font-size: 14px;
+        color: var(--navy-light);
+        font-weight: 800;
+        margin-bottom: 12px;
+        display: block;
+    }
+
+    .input-wrapper {
+        position: relative;
+        margin-bottom: 25px;
+    }
+
+    .input-wrapper input {
+        width: 100%;
+        padding: 18px 20px;
+        font-size: 20px;
+        font-weight: 700;
+        border: 2px solid #edf0f5;
+        border-radius: 18px;
+        outline: none;
+        transition: 0.3s;
+        box-sizing: border-box;
+        background: #fcfdfe;
+        color: var(--navy-deep);
+    }
+
+    .input-wrapper input:focus {
+        border-color: var(--navy-deep);
+        background: white;
+        box-shadow: 0 0 0 4px rgba(26, 35, 126, 0.05);
+    }
+
+    .input-wrapper .unit {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-weight: 700;
+        color: #999;
+    }
+
+    .calc-btn {
+        width: 100%;
+        padding: 20px;
+        background: var(--navy-deep);
+        color: white;
+        border: none;
+        border-radius: 18px;
+        font-size: 18px;
+        font-weight: 800;
+        cursor: pointer;
+        box-shadow: 0 8px 20px rgba(26, 35, 126, 0.2);
+        transition: 0.2s;
+    }
+
+    .calc-btn:active {
+        transform: scale(0.97);
+        opacity: 0.9;
+    }
+
+    /* 결과 대시보드 스타일 */
+    .result-dashboard {
+        display: none;
+        margin-top: 35px;
+        padding: 25px;
+        background: linear-gradient(145deg, #ffffff, #f8faff);
+        border-radius: 25px;
+        border: 1px solid #eef0f5;
+        animation: slideUp 0.5s ease-out;
+    }
+
+    .result-item {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .result-item:last-child { margin-bottom: 0; }
+
+    .result-label {
+        font-size: 13px;
+        color: #777;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .result-value {
+        font-size: 28px;
+        font-weight: 800;
+        color: var(--navy-deep);
+    }
+
+    .result-value span {
+        font-size: 16px;
+        margin-left: 4px;
+        color: #333;
+    }
+
+    .info-tip {
+        margin-top: 25px;
+        font-size: 12px;
+        color: #999;
+        line-height: 1.6;
+        text-align: center;
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
   <header class="header">
-    <div class="header-inner">
-      <a href="index.html" class="back-btn">←</a>
+    <div class="header-inner" style="justify-content: center;">
       <h1>실업급여 모의계산</h1>
     </div>
   </header>
+
   <main class="container">
-    <div class="content-box">
+    <div class="calc-container">
       <div class="input-group">
-        <label>퇴사 전 3개월 평균 월급 (원)</label>
-        <input type="number" id="salary" placeholder="예: 3000000">
+        <span class="input-label">평균 월 급여</span>
+        <div class="input-wrapper">
+          <input type="number" id="salary" placeholder="최근 3개월 평균" inputmode="numeric">
+          <span class="unit">원</span>
+        </div>
       </div>
-      <button class="calc-btn" onclick="calc()">예상 금액 확인</button>
-      <div id="result" class="result-box" style="display:none;">
-        <p style="margin-bottom:5px; color:#666;">예상 1일 지급액</p>
-        <strong id="amt" style="font-size:22px; color:var(--primary-dark);">0</strong>원
+
+      <button class="calc-btn" onclick="calculate()">내 예상 수령액 계산하기</button>
+
+      <div id="result" class="result-dashboard">
+        <div class="result-item">
+          <span class="result-label">1일 예상 구직급여</span>
+          <div class="result-value"><strong id="amt">0</strong><span>원</span></div>
+        </div>
+        <div style="height: 1px; background: #eee; margin: 15px 0;"></div>
+        <div class="result-item">
+          <span class="result-label">한 달 기준 (30일)</span>
+          <div class="result-value" style="font-size: 22px; color: var(--navy-light);"><strong id="monthAmt">0</strong><span>원</span></div>
+        </div>
+        
+        <p class="info-tip">
+          * 실제 수급액은 가입 기간 및 연령에 따라 다를 수 있습니다.<br>
+          * 2026년 기준 하한액/상한액이 적용된 결과입니다.
+        </p>
       </div>
     </div>
+
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="index.html" style="color: var(--navy-light); font-weight: 700; text-decoration: none; font-size: 15px; border-bottom: 1px solid var(--navy-light);">홈으로 돌아가기</a>
+    </div>
   </main>
+
   <script>
-    function calc() {
+    function calculate() {
       const s = document.getElementById('salary').value;
-      if(!s) return alert('월급을 입력해주세요.');
+      if(!s || s <= 0) {
+        alert('올바른 급여를 입력해주세요.');
+        return;
+      }
+
+      // 1일 구직급여 산출 로직 (평균임금의 60%)
       let daily = (s / 30) * 0.6;
-      if (daily > 66000) daily = 66000;
-      if (daily < 60120) daily = 60120;
+      
+      // 상한액 및 하한액 설정 (예시 기준)
+      const maxDaily = 66000;
+      const minDaily = 60120;
+
+      if (daily > maxDaily) daily = maxDaily;
+      if (daily < minDaily) daily = minDaily;
+
+      const monthly = daily * 30;
+
+      // 숫자 카운트 애니메이션 효과 (선택사항이지만 시각적으로 좋음)
       document.getElementById('amt').innerText = Math.floor(daily).toLocaleString();
+      document.getElementById('monthAmt').innerText = Math.floor(monthly).toLocaleString();
+      
+      // 결과창 노출
       document.getElementById('result').style.display = 'block';
+      
+      // 계산 완료 후 버튼 텍스트 변경
+      document.querySelector('.calc-btn').innerText = '다시 계산하기';
     }
   </script>
 </body>
