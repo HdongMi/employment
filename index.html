@@ -6,30 +6,60 @@
     <title>고용24 - 스마트 정책 가이드</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/moonspam/NanumSquareRound@master/nanumsquareround.min.css">
     <style>
-        /* 🚀 스플래시 및 기본 레이아웃 유지 */
+        :root {
+            --primary-blue: #1a237e;
+            --accent-blue: #2563eb;
+        }
+
+        body { 
+            font-family: 'NanumSquareRound', sans-serif; 
+            background: #f8f9fa; 
+            margin: 0; 
+            padding: 0; 
+            color: #1f2937; 
+        }
+
+        /* ✨ 스플래시 화면 설정 */
         .splash {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, #1a237e 0%, #2563eb 100%); 
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%); 
             display: flex; flex-direction: column;
             justify-content: center; align-items: center; z-index: 10000;
-            transition: opacity 0.5s ease, visibility 0.5s; text-align: center;
+            transition: opacity 0.5s ease, visibility 0.5s; 
+            text-align: center;
         }
-        .splash-logo { font-size: 80px; margin-bottom: 10px; }
+
+        /* 🎈 [수정] 잔잔하게 통통 튀는 로고 애니메이션 */
+        @keyframes softBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-25px); } /* 위로 25px 이동 */
+        }
+        
+        .splash-logo { 
+            font-size: 80px; 
+            margin-bottom: 10px; 
+            display: inline-block;
+            animation: softBounce 2s infinite ease-in-out; /* 2초 주기로 반복 */
+        }
+
         .splash-title { font-size: 32px; font-weight: 800; color: white; margin: 0; }
         .splash-sub { font-size: 16px; color: rgba(255,255,255,0.8); margin: 10px 0 40px; }
+
         .start-btn {
-            background: white; color: #1a237e; border: none;
+            background: white; color: var(--primary-blue); border: none;
             padding: 18px 60px; border-radius: 50px; font-size: 18px;
             font-weight: 800; cursor: pointer; transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
+        .start-btn:active { transform: scale(0.95); }
         .fade-out { opacity: 0; visibility: hidden; }
 
-        body { font-family: 'NanumSquareRound', sans-serif; background: #f8f9fa; margin: 0; padding: 0; color: #1f2937; }
-        .header { background: white; padding: 20px; text-align: center; border-bottom: 1px solid #eee; }
-        .header h1 { font-size: 20px; font-weight: 800; color: #1a237e; margin: 0; }
+        /* 메인 레이아웃 */
+        .header { background: white; padding: 20px; text-align: center; border-bottom: 1px solid #eee; position: sticky; top: 0; z-index: 100; }
+        .header h1 { font-size: 20px; font-weight: 800; color: var(--primary-blue); margin: 0; }
         .container { padding: 20px; max-width: 600px; margin: 0 auto; }
 
-        /* ✨ 인트로 올라오는 모션 */
+        /* 인트로 모션 */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -38,38 +68,25 @@
         .intro-desc { background: white; padding: 22px; border-radius: 20px; border: 1px solid #e5e7eb; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
         .intro-desc p { margin: 0; font-size: 15px; line-height: 1.7; color: #4b5563; }
 
-        /* 🛠 [추가] 뉴스 로딩바 애니메이션 (Skeleton UI) */
-        .loading-bar-container { padding: 10px 0; }
-        .loading-bar {
-            height: 14px;
-            background: #f0f2f5;
-            margin-bottom: 15px;
-            border-radius: 4px;
-            position: relative;
-            overflow: hidden;
-        }
+        /* 메뉴 그리드 */
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .grid-item { background: white; padding: 25px 15px; border-radius: 20px; text-decoration: none; color: inherit; text-align: center; border: 1px solid #f0f2f5; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .grid-item .icon { font-size: 32px; display: block; margin-bottom: 12px; }
+        .grid-item .label { font-size: 15px; font-weight: 800; }
+
+        /* 뉴스 로딩 스켈레톤 */
+        .loading-bar { height: 14px; background: #f0f2f5; margin-bottom: 15px; border-radius: 4px; position: relative; overflow: hidden; }
         .loading-bar::after {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
             animation: loading-scan 1.5s infinite;
         }
-        @keyframes loading-scan {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        /* 메뉴 그리드 */
-        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .grid-item { background: white; padding: 25px 15px; border-radius: 20px; text-decoration: none; color: inherit; text-align: center; border: 1px solid #f0f2f5; }
-        .grid-item .icon { font-size: 32px; display: block; margin-bottom: 12px; }
-        .grid-item .label { font-size: 15px; font-weight: 800; }
+        @keyframes loading-scan { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 
         /* 뉴스 섹션 */
         .news-section { background: white; border-radius: 25px; padding: 25px; margin: 25px 0; border: 1px solid #f0f2f5; }
         .news-header { display: flex; align-items: center; margin-bottom: 20px; }
-        .news-header h2 { font-size: 18px; color: #1a237e; font-weight: 800; margin: 0; }
+        .news-header h2 { font-size: 18px; color: var(--primary-blue); font-weight: 800; margin: 0; }
         .live-badge { background: #ff5252; color: white; font-size: 10px; padding: 3px 7px; border-radius: 4px; animation: blink 1.5s infinite; margin-left: 10px; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
     </style>
@@ -97,61 +114,57 @@
             <section class="menu-grid">
                 <p style="font-size:14px; font-weight:800; margin:25px 0 15px; color:#6b7280;">맞춤형 고용 서비스 센터</p>
                 <div class="grid-container">
-                    <a href="unemployment-check.html" class="grid-item"><span class="icon">✅</span><span class="label">실업급여<br>수급조건</span></a>
-                    <a href="unemployment-calc.html" class="grid-item"><span class="icon">🧮</span><span class="label">실업급여<br>모의계산</span></a>
-                    <a href="support-info.html" class="grid-item"><span class="icon">📋</span><span class="label">국민취업<br>지원제도</span></a>
-                    <a href="card-info.html" class="grid-item"><span class="icon">💳</span><span class="label">내일배움<br>카드 안내</span></a>
+                    <a href="#" class="grid-item"><span class="icon">✅</span><span class="label">실업급여<br>수급조건</span></a>
+                    <a href="#" class="grid-item"><span class="icon">🧮</span><span class="label">실업급여<br>모의계산</span></a>
+                    <a href="#" class="grid-item"><span class="icon">📋</span><span class="label">국민취업<br>지원제도</span></a>
+                    <a href="#" class="grid-item"><span class="icon">💳</span><span class="label">내일배움<br>카드 안내</span></a>
                 </div>
             </section>
 
             <section class="news-section">
                 <div class="news-header"><h2>최신 뉴스 <span class="live-badge">LIVE</span></h2></div>
                 <div id="news-container">
-                    <div class="loading-bar-container">
-                        <div class="loading-bar" style="width: 90%;"></div>
-                        <div class="loading-bar" style="width: 70%;"></div>
-                        <div class="loading-bar" style="width: 85%;"></div>
-                    </div>
+                    <div class="loading-bar" style="width: 90%;"></div>
+                    <div class="loading-bar" style="width: 70%;"></div>
                 </div>
             </section>
         </main>
     </div>
 
     <script>
+        // 앱 시작 시 스플래시 제거
         function startApp() {
             const splash = document.getElementById('splash');
             sessionStorage.setItem('emp_splash_viewed', 'true');
-            window.history.replaceState(null, null, window.location.href);
             splash.classList.add('fade-out');
             setTimeout(() => { splash.remove(); }, 500);
         }
 
+        // 뉴스 로딩 (예시 RSS)
         async function fetchLiveNews() {
             const container = document.getElementById('news-container');
-            // 뉴스 데이터 패칭 시작
             try {
-                const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent('https://news.google.com/rss/search?q=실업급여&hl=ko&gl=KR&ceid=KR:ko')}`);
+                const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent('https://news.google.com/rss/search?q=고용정책&hl=ko&gl=KR&ceid=KR:ko')}`);
                 const data = await res.json();
-                
                 if (data.status === 'ok') {
                     let html = '<ul style="list-style:none; padding:0; margin:0;">';
-                    data.items.slice(0, 5).forEach(item => {
-                        html += `
-                            <li style="padding:15px 0; border-bottom:1px solid #f8f9fa;">
-                                <a href="${item.link}" target="_blank" style="text-decoration:none; color:#333; font-size:14px; display:block;">
-                                    <strong>[뉴스]</strong> ${item.title}
-                                </a>
-                            </li>`;
+                    data.items.slice(0, 3).forEach(item => {
+                        html += `<li style="padding:12px 0; border-bottom:1px solid #f8f9fa;">
+                            <a href="${item.link}" target="_blank" style="text-decoration:none; color:#333; font-size:14px;">
+                                <strong>[공고]</strong> ${item.title}
+                            </a></li>`;
                     });
                     container.innerHTML = html + '</ul>';
                 }
-            } catch (e) { 
-                container.innerHTML = '<p style="text-align:center; padding:20px; color:#999; font-size:13px;">뉴스를 불러올 수 없습니다. 네트워크를 확인해주세요.</p>'; 
+            } catch (e) {
+                container.innerHTML = '<p style="font-size:13px; color:#999;">뉴스를 불러올 수 없습니다.</p>';
             }
         }
 
+        // 초기화
         (function() {
             fetchLiveNews();
+            // 이미 본 적이 있다면 스플래시 생략
             if (sessionStorage.getItem('emp_splash_viewed') === 'true') {
                 const splash = document.getElementById('splash');
                 if(splash) splash.remove();
