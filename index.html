@@ -27,7 +27,7 @@
         .start-btn { background: white; color: var(--primary-blue); border: none; padding: 18px 60px; border-radius: 50px; font-size: 18px; font-weight: 800; cursor: pointer; transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
         .fade-out { opacity: 0; visibility: hidden; }
 
-        /* 🌀 [신규] 페이지 이동 로딩 오버레이 */
+        /* 🌀 페이지 이동 로딩 오버레이 (뉴스 전용) */
         .loading-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(255, 255, 255, 0.9);
@@ -66,7 +66,6 @@
         .news-header { display: flex; align-items: center; margin-bottom: 20px; }
         .news-header h2 { font-size: 18px; color: var(--primary-blue); font-weight: 800; margin: 0; }
         .live-badge { background: #ff5252; color: white; font-size: 10px; padding: 3px 7px; border-radius: 4px; animation: blink 1.5s infinite; margin-left: 10px; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
         
         /* 뉴스 스켈레톤 바 */
         .loading-bar { height: 14px; background: #f0f2f5; margin-bottom: 15px; border-radius: 4px; position: relative; overflow: hidden; }
@@ -102,10 +101,10 @@
             <section class="menu-grid">
                 <p style="font-size:14px; font-weight:800; margin:25px 0 15px; color:#6b7280;">맞춤형 고용 서비스 센터</p>
                 <div class="grid-container">
-                    <a href="unemployment-check.html" class="grid-item link-btn"><span class="icon">✅</span><span class="label">실업급여<br>수급조건</span></a>
-                    <a href="unemployment-calc.html" class="grid-item link-btn"><span class="icon">🧮</span><span class="label">실업급여<br>모의계산</span></a>
-                    <a href="support-info.html" class="grid-item link-btn"><span class="icon">📋</span><span class="label">국민취업<br>지원제도</span></a>
-                    <a href="card-info.html" class="grid-item link-btn"><span class="icon">💳</span><span class="label">내일배움<br>카드 안내</span></a>
+                    <a href="unemployment-check.html" class="grid-item"><span class="icon">✅</span><span class="label">실업급여<br>수급조건</span></a>
+                    <a href="unemployment-calc.html" class="grid-item"><span class="icon">🧮</span><span class="label">실업급여<br>모의계산</span></a>
+                    <a href="support-info.html" class="grid-item"><span class="icon">📋</span><span class="label">국민취업<br>지원제도</span></a>
+                    <a href="card-info.html" class="grid-item"><span class="icon">💳</span><span class="label">내일배움<br>카드 안내</span></a>
                 </div>
             </section>
 
@@ -122,14 +121,13 @@
     <script>
         const loadingOverlay = document.getElementById('loadingOverlay');
 
-        // [중요] 모든 링크 클릭 시 로딩바 표시 함수
-        function handleLinkClick(e) {
+        // [뉴스 전용] 링크 클릭 시 로딩바 표시 함수
+        function handleNewsLinkClick(e) {
             const href = this.getAttribute('href');
             if (href && href !== '#' && !href.startsWith('javascript')) {
-                e.preventDefault(); // 일단 이동 중단
-                loadingOverlay.classList.add('active'); // 로딩창 표시
+                e.preventDefault();
+                loadingOverlay.classList.add('active');
                 
-                // 0.8초 정도 뒤에 실제 페이지 이동 (너무 짧으면 로딩창이 안 보임)
                 setTimeout(() => {
                     window.location.href = href;
                 }, 800);
@@ -151,7 +149,6 @@
                 if (data.status === 'ok') {
                     let html = '<ul style="list-style:none; padding:0; margin:0;">';
                     data.items.slice(0, 3).forEach(item => {
-                        // 뉴스 링크에도 클래스 부여하여 로딩바 적용
                         html += `
                             <li style="padding:15px 0; border-bottom:1px solid #f8f9fa;">
                                 <a href="${item.link}" class="news-link" style="text-decoration:none; color:#333; font-size:14px; display:block;">
@@ -161,9 +158,9 @@
                     });
                     container.innerHTML = html + '</ul>';
 
-                    // 생성된 뉴스 링크들에 이벤트 바인딩
+                    // 생성된 뉴스 링크들에만 이벤트 바인딩
                     document.querySelectorAll('.news-link').forEach(link => {
-                        link.addEventListener('click', handleLinkClick);
+                        link.addEventListener('click', handleNewsLinkClick);
                     });
                 }
             } catch (e) {
@@ -174,10 +171,7 @@
         (function() {
             fetchLiveNews();
 
-            // 상단 메뉴 버튼들에 로딩 이벤트 적용
-            document.querySelectorAll('.link-btn').forEach(btn => {
-                btn.addEventListener('click', handleLinkClick);
-            });
+            // 📝 상단 메뉴 버튼들에 적용되었던 이벤트 바인딩 코드를 삭제했습니다.
 
             if (sessionStorage.getItem('emp_splash_viewed') === 'true') {
                 const splash = document.getElementById('splash');
