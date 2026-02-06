@@ -148,7 +148,7 @@
                 const data = await res.json();
                 if (data.status === 'ok') {
                     let html = '<ul style="list-style:none; padding:0; margin:0;">';
-                    data.items.slice(0, 3).forEach(item => {
+                    data.items.slice(0, 10).forEach(item => {
                         html += `
                             <li style="padding:15px 0; border-bottom:1px solid #f8f9fa;">
                                 <a href="${item.link}" class="news-link" style="text-decoration:none; color:#333; font-size:14px; display:block;">
