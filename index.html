@@ -3,130 +3,245 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>고용24 - 스마트 채용 가이드</title>
+  <title>고용24 - 스마트 고용 가이드</title>
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* ── 고용24 전용 추가 스타일 ── */
-    .brand-icon { font-size: 20px; line-height: 1; }
 
-    /* 카테고리 필터 칩 */
-    .chip-row {
-      display: flex;
-      gap: 8px;
-      padding: 0 24px 14px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-      border-top: 1px solid var(--border-light);
-    }
-    .chip-row::-webkit-scrollbar { display: none; }
-
-    .chip {
-      flex-shrink: 0;
-      padding: 6px 14px;
-      border-radius: 50px;
-      border: 1.5px solid var(--border);
-      background: var(--white);
-      font-size: 13px;
-      font-weight: 600;
-      font-family: var(--font-main);
-      color: var(--text-secondary);
-      cursor: pointer;
-      transition: all 0.15s ease;
-      white-space: nowrap;
-    }
-    .chip:hover { border-color: var(--text-primary); color: var(--text-primary); }
-    .chip.active {
+    /* ── 스플래시 ── */
+    .splash {
+      position: fixed;
+      inset: 0;
       background: var(--text-primary);
-      color: var(--white);
-      border-color: var(--text-primary);
-    }
-
-    /* 카드 추가 요소 */
-    .card-tags {
       display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-top: 4px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9000;
+      text-align: center;
+      transition: opacity 0.4s ease, visibility 0.4s;
     }
-    .tag {
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 6px;
-      background: var(--accent-soft);
-      color: var(--text-secondary);
-      font-weight: 600;
-    }
+    .splash.fade-out { opacity: 0; visibility: hidden; }
 
-    /* 상세 – 추가 필드 */
-    .detail-desc {
-      background: var(--white);
-      border-radius: var(--radius-lg);
-      padding: 20px;
-      margin-bottom: 20px;
-      border: 1px solid var(--border);
+    .splash-logo {
+      font-size: 64px;
+      margin-bottom: 16px;
+      animation: splashBounce 1.8s ease-in-out infinite;
+    }
+    @keyframes splashBounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-16px); }
+    }
+    .splash-title {
+      font-family: var(--font-main);
+      font-size: 30px;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -1px;
+      margin-bottom: 6px;
+    }
+    .splash-sub {
       font-size: 14px;
-      color: var(--text-secondary);
-      line-height: 1.7;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 40px;
       letter-spacing: -0.2px;
     }
-    .detail-desc strong { color: var(--text-primary); font-weight: 700; }
-
-    /* 탭 – 채용공고/정책 구분 */
-    .page-tab-row {
-      display: flex;
-      gap: 0;
-      padding: 12px 24px 0;
-    }
-    .page-tab {
-      flex: 1;
-      padding: 10px 0;
-      text-align: center;
-      font-size: 13px;
-      font-weight: 700;
-      font-family: var(--font-main);
-      color: var(--text-muted);
-      background: none;
-      border: none;
-      border-bottom: 2px solid transparent;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .page-tab.active {
+    .splash-btn {
+      padding: 15px 48px;
+      background: var(--white);
       color: var(--text-primary);
-      border-bottom-color: var(--text-primary);
+      border: none;
+      border-radius: 50px;
+      font-size: 15px;
+      font-weight: 800;
+      font-family: var(--font-main);
+      cursor: pointer;
+      letter-spacing: -0.3px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .splash-btn:hover  { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(0,0,0,0.25); }
+    .splash-btn:active { transform: translateY(0); }
+
+    /* ── 메인 콘텐츠 래퍼 ── */
+    #mainContent {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      min-height: 100vh;
     }
 
-    /* 섹션 헤더 */
-    .list-section-header {
+    /* ── 홈 헤더 ── */
+    .home-header {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+    }
+    .home-header-top {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 6px 8px 2px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-light);
     }
-    .list-section-header span {
-      font-size: 13px;
-      color: var(--text-muted);
-      font-weight: 500;
+    .home-hero {
+      padding: 28px 24px 24px;
     }
-    .list-section-header strong {
-      font-size: 13px;
-      color: var(--text-primary);
+    .home-hero-label {
+      font-size: 11px;
       font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+    .home-hero-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.25;
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+    .home-hero-title em {
+      font-style: italic;
+      font-weight: 400;
+      font-family: var(--font-display);
+      color: var(--text-secondary);
+    }
+    .home-hero-sub {
+      font-size: 14px;
+      color: var(--text-muted);
+      letter-spacing: -0.2px;
+      line-height: 1.6;
     }
 
-    /* 스켈레톤 로딩 */
-    .skeleton-card {
-      background: var(--white);
+    /* ── 홈 본문 ── */
+    .home-body {
+      padding: 20px 16px 56px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    /* ── 채용공고 배너 ── */
+    .job-banner {
+      background: var(--text-primary);
       border-radius: var(--radius-lg);
       padding: 22px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      text-decoration: none;
+      box-shadow: var(--shadow-md);
+      transition: background 0.15s, transform 0.15s;
+      animation: fadeUp 0.4s ease both;
+    }
+    .job-banner:hover  { background: #222; transform: translateY(-1px); }
+    .job-banner:active { transform: translateY(0); }
+    .job-banner-left   { display: flex; flex-direction: column; gap: 4px; }
+    .job-banner-label  { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.45); letter-spacing: 0.5px; }
+    .job-banner-title  { font-size: 17px; font-weight: 800; color: var(--white); letter-spacing: -0.5px; }
+    .job-banner-sub    { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+    .job-banner-arrow  {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      color: var(--white);
+    }
+
+    /* ── 빠른 메뉴 그리드 ── */
+    .quick-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .quick-card {
+      background: var(--white);
       border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 20px 16px;
       display: flex;
       flex-direction: column;
       gap: 10px;
+      text-decoration: none;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s, transform 0.15s, border-color 0.2s;
+      animation: fadeUp 0.4s ease both;
     }
-    .skel {
-      border-radius: 6px;
+    .quick-card:hover  { box-shadow: var(--shadow-md); border-color: var(--border); transform: translateY(-2px); }
+    .quick-card:active { transform: translateY(0); box-shadow: var(--shadow-sm); }
+    .quick-card-icon  { font-size: 28px; line-height: 1; }
+    .quick-card-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text-primary);
+      line-height: 1.4;
+      letter-spacing: -0.3px;
+    }
+    .quick-card-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* ── 뉴스 카드 ── */
+    .news-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-light);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      animation: fadeUp 0.4s ease 0.15s both;
+    }
+    .news-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .news-card-header h2 {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.4px;
+    }
+    .live-dot {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #e53e3e;
+    }
+    .live-dot::before {
+      content: '';
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #e53e3e;
+      animation: livePulse 1.4s ease-in-out infinite;
+    }
+    @keyframes livePulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    /* 뉴스 스켈레톤 */
+    .news-skel { padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
+    .skel-bar {
+      height: 13px;
+      border-radius: 5px;
       background: linear-gradient(90deg, var(--border-light) 25%, var(--off-white) 50%, var(--border-light) 75%);
       background-size: 200% 100%;
       animation: shimmer 1.4s infinite;
@@ -135,626 +250,276 @@
       0%   { background-position: 200% 0; }
       100% { background-position: -200% 0; }
     }
-    .skel-title { height: 18px; width: 70%; }
-    .skel-sub   { height: 13px; width: 45%; }
-    .skel-sub2  { height: 13px; width: 55%; }
 
-    /* 빠른 메뉴 */
-    .quick-menu {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      padding: 16px 16px 4px;
-    }
-    .quick-item {
-      background: var(--white);
-      border: 1px solid var(--border-light);
-      border-radius: var(--radius-md);
-      padding: 14px 8px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
+    /* 뉴스 리스트 */
+    .news-list { list-style: none; padding: 0; margin: 0; }
+    .news-item { border-bottom: 1px solid var(--border-light); }
+    .news-item:last-child { border-bottom: none; }
+    .news-link {
+      display: block;
+      padding: 14px 20px;
       text-decoration: none;
-      cursor: pointer;
-      transition: box-shadow 0.15s, transform 0.12s;
-      box-shadow: var(--shadow-sm);
+      transition: background 0.12s;
     }
-    .quick-item:active { transform: scale(0.96); }
-    .quick-item:hover { box-shadow: var(--shadow-md); }
-    .quick-icon { font-size: 22px; line-height: 1; }
-    .quick-label {
+    .news-link:hover { background: var(--off-white); }
+    .news-link-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.5;
+      letter-spacing: -0.2px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .news-link-date {
       font-size: 11px;
-      font-weight: 700;
-      color: var(--text-secondary);
-      text-align: center;
-      line-height: 1.3;
-      font-family: var(--font-main);
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 500;
     }
 
-    /* 섹션 타이틀 */
-    .section-title {
+    /* ── 안내 배너 ── */
+    .info-banner {
+      background: var(--off-white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.65;
+      letter-spacing: -0.2px;
+      animation: fadeUp 0.4s ease 0.2s both;
+    }
+    .info-banner strong { color: var(--text-primary); font-weight: 700; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── 로딩 오버레이 ── */
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(244,243,240,0.92);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5000;
+    }
+    .loader-content { text-align: center; }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 3px solid var(--border);
+      border-top: 3px solid var(--text-primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loader-content p {
+      color: var(--text-secondary);
+      font-weight: 600;
       font-size: 14px;
-      font-weight: 800;
-      color: var(--text-primary);
-      padding: 16px 16px 6px;
       letter-spacing: -0.3px;
     }
-
-    /* 에러 배너 */
-    .error-banner {
-      margin: 0 16px;
-      padding: 12px 16px;
-      background: #fff8e1;
-      border: 1px solid #ffe082;
-      border-radius: var(--radius-md);
-      font-size: 13px;
-      color: #795548;
-      font-weight: 500;
-      display: none;
-    }
-    .error-banner.show { display: block; }
   </style>
 </head>
 <body>
-  <div id="mainLayout">
-    <!-- ─── HEADER ─── -->
-    <header class="header">
-      <div class="header-top">
+
+  <!-- ── 스플래시 ── -->
+  <div id="splash" class="splash">
+    <div class="splash-logo">💼</div>
+    <div class="splash-title">고용24</div>
+    <div class="splash-sub">알기 쉬운 고용 정책 가이드</div>
+    <button class="splash-btn" onclick="startApp()">시작하기</button>
+  </div>
+
+  <!-- ── 로딩 오버레이 ── -->
+  <div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="loader-content">
+      <div class="spinner"></div>
+      <p>페이지로 이동 중입니다...</p>
+    </div>
+  </div>
+
+  <!-- ── 메인 콘텐츠 ── -->
+  <div id="mainContent">
+
+    <header class="home-header">
+      <div class="home-header-top">
         <div class="header-brand">
           <span class="brand-icon">💼</span>
           <span class="brand-name">고용24</span>
         </div>
         <nav class="nav-tabs">
-          <button class="tab-btn active" data-page="jobs">채용공고</button>
-          <button class="tab-btn" data-page="policy">지원정책</button>
-          <button class="tab-btn" data-page="favorites">관심목록</button>
+          <a href="index.html"        class="tab-btn active">홈</a>
+          <a href="job-info.html"     class="tab-btn" onclick="handleNav(event,'job-info.html')">채용공고</a>
+          <a href="support-info.html" class="tab-btn" onclick="handleNav(event,'support-info.html')">지원정책</a>
         </nav>
       </div>
-      <div class="header-body">
-        <h1 class="main-title">일자리<br><em>맞춤 탐색</em></h1>
-        <p class="main-sub">고용24 채용공고와 지원정책을 한눈에 확인하세요</p>
-        <div class="search-wrap">
-          <span class="search-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
-          </span>
-          <input type="text" id="searchInput" placeholder="직종, 기업명, 지역으로 검색" />
-        </div>
-      </div>
-
-      <!-- 채용공고 탭 전용 필터 -->
-      <div id="jobFilterRow" class="filter-row">
-        <div class="toggle-container">
-          <button class="toggle-btn active" data-state="open">모집중</button>
-          <button class="toggle-btn" data-state="closed">마감</button>
-          <div class="toggle-slider"></div>
-        </div>
-      </div>
-
-      <!-- 카테고리 칩 (채용공고) -->
-      <div id="chipRow" class="chip-row">
-        <button class="chip active" data-cat="all">전체</button>
-        <button class="chip" data-cat="정규직">정규직</button>
-        <button class="chip" data-cat="계약직">계약직</button>
-        <button class="chip" data-cat="청년">청년</button>
-        <button class="chip" data-cat="시니어">시니어</button>
-        <button class="chip" data-cat="장애인">장애인</button>
-        <button class="chip" data-cat="외국인">외국인</button>
+      <div class="home-hero">
+        <p class="home-hero-label">Employment 24 · Smart Guide</p>
+        <h1 class="home-hero-title">일하는 당신의<br><em>내일을 위해</em></h1>
+        <p class="home-hero-sub">채용공고부터 실업급여, 지원정책까지<br>고용24가 파트너가 됩니다.</p>
       </div>
     </header>
 
-    <!-- 에러 배너 -->
-    <div id="errorBanner" class="error-banner">
-      ⚠️ 실시간 데이터를 불러오지 못했습니다. 샘플 데이터를 표시합니다.
-    </div>
+    <div class="home-body">
 
-    <!-- ─── MAIN LIST ─── -->
-    <main id="policyList"></main>
-  </div>
+      <!-- 채용공고 배너 -->
+      <div>
+        <p class="section-label">실시간 채용</p>
+        <a href="job-info.html" class="job-banner" onclick="handleNav(event,'job-info.html')">
+          <div class="job-banner-left">
+            <span class="job-banner-label">고용24 채용공고</span>
+            <span class="job-banner-title">📌 실시간 채용공고 보기</span>
+            <span class="job-banner-sub">지역·경력·근무형태 필터로 빠르게 탐색</span>
+          </div>
+          <div class="job-banner-arrow">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </div>
+        </a>
+      </div>
 
-  <!-- ─── DETAIL VIEW ─── -->
-  <div id="detailView" class="detail hidden">
-    <button class="back-btn" id="backBtn">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-        <polyline points="15 18 9 12 15 6"/>
-      </svg>
-      목록으로
-    </button>
-    <div class="detail-inner">
-      <div class="detail-badge" id="detailBadge">모집중</div>
-      <h2 id="detailTitle">-</h2>
-      <div id="detailDesc" class="detail-desc hidden"></div>
-      <div class="detail-meta" id="detailMeta">
-        <div class="meta-item">
-          <span class="meta-label">기업명</span>
-          <span class="meta-value" id="detailCompany">-</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label">근무지역</span>
-          <span class="meta-value" id="detailLocation">-</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label">고용형태</span>
-          <span class="meta-value" id="detailType">-</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label">급여</span>
-          <span class="meta-value" id="detailSalary">-</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label">마감일</span>
-          <span class="meta-value" id="detailDeadline">-</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label">출처</span>
-          <span class="meta-value" id="detailSource">고용24</span>
+      <!-- 빠른 메뉴 -->
+      <div>
+        <p class="section-label">맞춤형 고용 서비스</p>
+        <div class="quick-grid">
+          <a href="unemployment-check.html" class="quick-card" style="animation-delay:0s"
+             onclick="handleNav(event,'unemployment-check.html')">
+            <span class="quick-card-icon">✅</span>
+            <div>
+              <div class="quick-card-title">실업급여<br>수급조건</div>
+              <div class="quick-card-desc">내가 받을 수 있는지 빠르게 확인</div>
+            </div>
+          </a>
+          <a href="unemployment-calc.html" class="quick-card" style="animation-delay:0.05s"
+             onclick="handleNav(event,'unemployment-calc.html')">
+            <span class="quick-card-icon">🧮</span>
+            <div>
+              <div class="quick-card-title">실업급여<br>모의계산</div>
+              <div class="quick-card-desc">예상 수급액을 미리 계산해보세요</div>
+            </div>
+          </a>
+          <a href="support-info.html" class="quick-card" style="animation-delay:0.1s"
+             onclick="handleNav(event,'support-info.html')">
+            <span class="quick-card-icon">📋</span>
+            <div>
+              <div class="quick-card-title">국민취업<br>지원제도</div>
+              <div class="quick-card-desc">구직촉진수당 · 취업지원 서비스</div>
+            </div>
+          </a>
+          <a href="card-info.html" class="quick-card" style="animation-delay:0.15s"
+             onclick="handleNav(event,'card-info.html')">
+            <span class="quick-card-icon">💳</span>
+            <div>
+              <div class="quick-card-title">내일배움<br>카드 안내</div>
+              <div class="quick-card-desc">최대 500만원 직업훈련비 지원</div>
+            </div>
+          </a>
         </div>
       </div>
-      <div class="detail-actions">
-        <a id="detailLink" href="#" target="_blank" class="btn-primary">공고 원문 확인하기 →</a>
-        <button id="detailFavBtn" class="btn-secondary">⭐ 관심 공고 저장</button>
-      </div>
-    </div>
-  </div>
 
-  <!-- ─── 로딩 오버레이 ─── -->
-  <div id="loadingOverlay" class="loading-overlay hidden">
-    <div class="loader-content">
-      <div class="spinner"></div>
-      <p>공고 페이지로 이동 중입니다...</p>
+      <!-- 최신 뉴스 -->
+      <div>
+        <p class="section-label">최신 고용 뉴스</p>
+        <div class="news-card">
+          <div class="news-card-header">
+            <h2>실업급여 · 고용 소식</h2>
+            <span class="live-dot">LIVE</span>
+          </div>
+          <div id="newsContainer">
+            <div class="news-skel">
+              <div class="skel-bar" style="width:88%"></div>
+              <div class="skel-bar" style="width:65%"></div>
+              <div class="skel-bar" style="width:80%"></div>
+              <div class="skel-bar" style="width:55%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 안내 문구 -->
+      <div class="info-banner">
+        <strong>고용24</strong>는 복잡한 고용 정책을 누구나 쉽게 이해하고 혜택을 누릴 수 있도록 돕는 스마트 가이드 서비스입니다. 채용공고·실업급여·직업훈련 정보를 한 곳에서 확인하세요.
+      </div>
+
     </div>
   </div>
 
   <script>
-  /* ════════════════════════════════════════════
-     고용24 앱 스크립트
-  ════════════════════════════════════════════ */
+  /* ── 스플래시: 재방문 시 건너뜀 ── */
+  (function() {
+    if (sessionStorage.getItem('g24_splash') === '1') {
+      const s = document.getElementById('splash');
+      if (s) s.remove();
+    }
+  })();
 
-  /* ── 샘플 데이터 (API 실패 시 fallback) ── */
-  const SAMPLE_JOBS = [
-    {
-      id: 's1', title: '[정규직] 영업관리자 모집', company: '(주)한국무역', location: '서울 강남구',
-      type: '정규직', salary: '면접 후 결정', deadline: '2025-07-31', status: 'open',
-      cat: '정규직', link: 'https://www.work24.go.kr',
-      desc: '고용24를 통해 지원 가능한 영업관리자 채용 공고입니다. 영업 전략 수립 및 고객사 관리 업무를 담당합니다.'
-    },
-    {
-      id: 's2', title: '[청년인턴] IT 개발 인턴 (백엔드)', company: '스타트업코리아', location: '서울 마포구',
-      type: '인턴', salary: '월 220만원', deadline: '2025-06-30', status: 'open',
-      cat: '청년', link: 'https://www.work24.go.kr',
-      desc: '청년 취업지원 프로그램을 통해 채용되는 IT 개발 인턴 공고입니다. Node.js / Python 개발 경험 우대.'
-    },
-    {
-      id: 's3', title: '[계약직] 행정사무원 모집', company: '서울특별시 산하기관', location: '서울 중구',
-      type: '계약직(1년)', salary: '월 230만원', deadline: '2025-06-15', status: 'open',
-      cat: '계약직', link: 'https://www.work24.go.kr',
-      desc: '공공기관 행정사무원으로 문서관리, 예산 보조, 민원 응대 업무를 담당합니다.'
-    },
-    {
-      id: 's4', title: '[장애인] 사무보조 채용 (장애인 우선)', company: '복지재단', location: '경기 수원시',
-      type: '정규직', salary: '최저임금 이상', deadline: '2025-08-01', status: 'open',
-      cat: '장애인', link: 'https://www.work24.go.kr',
-      desc: '장애인 의무고용 대상 공고로 장애인 지원자 우대합니다. 사무보조 및 데이터 입력 업무.'
-    },
-    {
-      id: 's5', title: '[시니어] 경비·시설관리 모집 (60세 이상 가능)', company: '안심경비', location: '부산 해운대구',
-      type: '파트타임', salary: '시급 11,000원', deadline: '2025-07-15', status: 'open',
-      cat: '시니어', link: 'https://www.work24.go.kr',
-      desc: '고령자 친화 기업으로 60세 이상 지원 가능. 야간 교대 근무 포함. 건강보험 적용.'
-    },
-    {
-      id: 's6', title: '[외국인] 제조업 생산직 (E-9)', company: '대한제조', location: '경기 안산시',
-      type: '정규직', salary: '월 250만원~', deadline: '2025-06-20', status: 'open',
-      cat: '외국인', link: 'https://www.work24.go.kr',
-      desc: '외국인 근로자(E-9 비자) 대상 생산직 모집. 기숙사 제공, 한국어 지원 가능.'
-    },
-    {
-      id: 's7', title: '[정규직] 간호사 채용 - 상급종합병원', company: '서울대학교병원', location: '서울 종로구',
-      type: '정규직', salary: '면접 후 결정', deadline: '2025-05-31', status: 'closed',
-      cat: '정규직', link: 'https://www.work24.go.kr',
-      desc: '상급종합병원 간호사 정규직 채용. 간호사 면허 필수, 신규·경력 모두 지원 가능.'
-    },
-  ];
+  function startApp() {
+    sessionStorage.setItem('g24_splash', '1');
+    const s = document.getElementById('splash');
+    s.classList.add('fade-out');
+    setTimeout(() => s.remove(), 420);
+  }
 
-  const SAMPLE_POLICIES = [
-    {
-      id: 'p1', title: '국민취업지원제도 (구직촉진수당)', company: '고용노동부', location: '전국',
-      type: '취업지원', salary: '월 50만원(6개월)', deadline: '상시', status: 'open',
-      cat: '청년', link: 'https://www.work24.go.kr/cm/c/1000/selectPolicyInfoByJobSeeker.do',
-      desc: '취업을 원하는 저소득 구직자에게 취업지원 서비스와 함께 구직촉진수당을 제공합니다.'
-    },
-    {
-      id: 'p2', title: '청년도약계좌 연계 취업지원', company: '금융위원회', location: '전국',
-      type: '금융지원', salary: '월 최대 70만원 매칭', deadline: '2025-12-31', status: 'open',
-      cat: '청년', link: 'https://www.work24.go.kr',
-      desc: '만 19~34세 청년 대상. 청년도약계좌와 연계한 취업·자산형성 복합 지원 정책.'
-    },
-    {
-      id: 'p3', title: '내일배움카드 (국민내일배움카드)', company: '한국직업능력개발원', location: '전국',
-      type: '직업훈련', salary: '최대 500만원 훈련비 지원', deadline: '상시', status: 'open',
-      cat: '전체', link: 'https://www.work24.go.kr/cm/c/1000/selectPolicyInfoByJobSeeker.do',
-      desc: '실업자, 재직자 모두 신청 가능. 직업훈련비용을 최대 500만원까지 지원합니다.'
-    },
-    {
-      id: 'p4', title: '고용촉진장려금 (장애인 고용)', company: '한국장애인고용공단', location: '전국',
-      type: '기업지원', salary: '월 최대 80만원 지급', deadline: '상시', status: 'open',
-      cat: '장애인', link: 'https://www.work24.go.kr',
-      desc: '장애인을 고용하는 사업주에게 인건비 일부를 보조하는 장려금 제도.'
-    },
-  ];
+  /* ── 페이지 이동 오버레이 ── */
+  const overlay = document.getElementById('loadingOverlay');
 
-  /* ── 상태 ── */
-  let state = {
-    page: 'jobs',          // jobs | policy | favorites
-    filterState: 'open',
-    cat: 'all',
-    query: '',
-    currentItem: null,
-    favorites: JSON.parse(localStorage.getItem('emp24_favs') || '[]'),
-    jobs: [],
-    policies: [],
-    loaded: false,
+  function handleNav(e, href) {
+    e.preventDefault();
+    overlay.classList.remove('hidden');
+    setTimeout(() => { window.location.href = href; }, 500);
+  }
+
+  window.onpageshow = function(ev) {
+    if (ev.persisted) overlay.classList.add('hidden');
   };
 
-  /* ── DOM ── */
-  const listEl      = document.getElementById('policyList');
-  const detailEl    = document.getElementById('detailView');
-  const backBtn     = document.getElementById('backBtn');
-  const searchInput = document.getElementById('searchInput');
-  const filterRow   = document.getElementById('jobFilterRow');
-  const chipRow     = document.getElementById('chipRow');
-  const errorBanner = document.getElementById('errorBanner');
-  const overlay     = document.getElementById('loadingOverlay');
-
-  /* ── 초기화 ── */
-  init();
-
-  async function init() {
-    bindEvents();
-    await loadJobData();
-    render();
-  }
-
-  /* ── 고용24 공개 RSS / API 시도 ── */
-  async function loadJobData() {
-    // 고용24는 직접 CORS 허용 API가 없으므로
-    // 1) rss2json 프록시로 구직정보 RSS 시도
-    // 2) 실패 시 sample fallback
+  /* ── 실시간 뉴스 (Google RSS) ── */
+  async function fetchNews() {
+    const container = document.getElementById('newsContainer');
     try {
-      const rssUrl = 'https://www.work24.go.kr/cm/c/1000/rss/rssRecruitList.do';
-      const proxyUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}&count=40`;
-      const res = await fetch(proxyUrl, { signal: AbortSignal.timeout(6000) });
-      const json = await res.json();
+      const rss = 'https://news.google.com/rss/search?q=실업급여+고용+채용&hl=ko&gl=KR&ceid=KR:ko';
+      const res  = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rss)}&count=8`);
+      const data = await res.json();
 
-      if (json.status === 'ok' && json.items && json.items.length > 0) {
-        state.jobs = json.items.map((item, i) => parseRssItem(item, i));
-        errorBanner.classList.remove('show');
-      } else {
-        throw new Error('empty');
-      }
+      if (data.status !== 'ok' || !data.items?.length) throw new Error('empty');
+
+      const ul = document.createElement('ul');
+      ul.className = 'news-list';
+
+      data.items.forEach(item => {
+        const d    = new Date(item.pubDate);
+        const date = `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+        const li   = document.createElement('li');
+        li.className = 'news-item';
+        li.innerHTML = `
+          <a href="${item.link}" class="news-link" target="_blank" rel="noopener">
+            <div class="news-link-title">${item.title}</div>
+            <div class="news-link-date">${date} · ${item.author || '고용 소식'}</div>
+          </a>`;
+        ul.appendChild(li);
+      });
+
+      container.innerHTML = '';
+      container.appendChild(ul);
+
     } catch(e) {
-      // fallback
-      state.jobs = SAMPLE_JOBS;
-      errorBanner.classList.add('show');
+      container.innerHTML = `
+        <p style="text-align:center;padding:28px 20px;color:var(--text-muted);font-size:13px;font-weight:500">
+          뉴스를 불러올 수 없습니다.
+        </p>`;
     }
-
-    state.policies = SAMPLE_POLICIES;
-    state.loaded = true;
   }
 
-  function parseRssItem(item, i) {
-    // RSS 아이템을 내부 포맷으로 변환
-    const title = item.title || '제목 없음';
-    const desc  = stripHtml(item.description || '');
-    const link  = item.link || 'https://www.work24.go.kr';
-
-    // 마감일 추출 시도
-    const deadlineMatch = desc.match(/(\d{4}[-./]\d{2}[-./]\d{2})/);
-    const deadline = deadlineMatch ? deadlineMatch[1] : '상시모집';
-
-    // 마감 여부 추론
-    let status = 'open';
-    if (deadlineMatch) {
-      const d = new Date(deadlineMatch[1]);
-      if (!isNaN(d) && d < new Date()) status = 'closed';
-    }
-
-    // 지역 추출 시도
-    const regions = ['서울','경기','인천','부산','대구','광주','대전','울산','세종','강원','충북','충남','전북','전남','경북','경남','제주'];
-    const foundRegion = regions.find(r => (title + desc).includes(r)) || '전국';
-
-    // 카테고리
-    const cats = ['정규직','계약직','청년','시니어','장애인','외국인'];
-    const foundCat = cats.find(c => (title + desc).includes(c)) || '정규직';
-
-    return {
-      id: 'r' + i,
-      title,
-      company: extractCompany(desc) || item.author || '정보 없음',
-      location: foundRegion,
-      type: foundCat,
-      salary: extractSalary(desc) || '면접 후 결정',
-      deadline,
-      status,
-      cat: foundCat,
-      link,
-      desc: desc.slice(0, 200) + (desc.length > 200 ? '…' : ''),
-    };
-  }
-
-  function stripHtml(html) {
-    return html.replace(/<[^>]*>/g, '').replace(/&[a-z]+;/gi, ' ').replace(/\s+/g, ' ').trim();
-  }
-  function extractCompany(text) {
-    const m = text.match(/기업명[:\s]+([^\s,]+)/);
-    return m ? m[1] : null;
-  }
-  function extractSalary(text) {
-    const m = text.match(/(월\s*[\d,]+만?원|시급\s*[\d,]+원|연봉\s*[\d,]+만?원)/);
-    return m ? m[1] : null;
-  }
-
-  /* ── 렌더링 ── */
-  function render() {
-    const data = getData();
-    renderList(data);
-    updateFilterVisibility();
-  }
-
-  function getData() {
-    let arr = state.page === 'jobs'      ? state.jobs
-             : state.page === 'policy'   ? state.policies
-             : getFavorites();
-
-    // 상태 필터 (favorites는 필터 없음)
-    if (state.page !== 'favorites') {
-      arr = arr.filter(d => d.status === state.filterState);
-    }
-
-    // 카테고리 필터
-    if (state.cat !== 'all') {
-      arr = arr.filter(d => d.cat === state.cat || d.type === state.cat);
-    }
-
-    // 검색
-    if (state.query.trim()) {
-      const q = state.query.toLowerCase();
-      arr = arr.filter(d =>
-        (d.title + d.company + d.location + d.type).toLowerCase().includes(q)
-      );
-    }
-
-    return arr;
-  }
-
-  function getFavorites() {
-    const all = [...state.jobs, ...state.policies];
-    return all.filter(d => state.favorites.includes(d.id));
-  }
-
-  function renderList(data) {
-    if (!state.loaded) {
-      listEl.innerHTML = renderSkeletons();
-      return;
-    }
-
-    if (data.length === 0) {
-      listEl.innerHTML = `
-        <div class="empty-state">
-          <div class="empty-icon">🔍</div>
-          <p>조건에 맞는 공고가 없습니다</p>
-        </div>`;
-      return;
-    }
-
-    // 빠른 메뉴 (채용공고 탭 모집중일 때만)
-    const quickMenu = (state.page === 'jobs' && state.filterState === 'open')
-      ? `<div class="quick-menu">
-          <div class="quick-item" onclick="openSite('https://www.work24.go.kr')">
-            <span class="quick-icon">🏢</span><span class="quick-label">고용24<br>바로가기</span>
-          </div>
-          <div class="quick-item" onclick="openSite('https://www.work24.go.kr/cm/c/1000/selectPolicyInfoByJobSeeker.do')">
-            <span class="quick-icon">📋</span><span class="quick-label">취업지원<br>정책</span>
-          </div>
-          <div class="quick-item" onclick="openSite('https://www.work24.go.kr/cm/c/1000/rss/rssRecruitList.do')">
-            <span class="quick-icon">📡</span><span class="quick-label">RSS<br>공고</span>
-          </div>
-          <div class="quick-item" onclick="changePage('favorites')">
-            <span class="quick-icon">⭐</span><span class="quick-label">관심<br>목록</span>
-          </div>
-        </div>
-        <p class="section-title">📌 채용공고 <span style="color:var(--text-muted);font-weight:500">${data.length}건</span></p>`
-      : `<p class="section-title">${state.page === 'favorites' ? '⭐ 관심 목록' : '📋 지원정책'} <span style="color:var(--text-muted);font-weight:500">${data.length}건</span></p>`;
-
-    const cards = data.map((item, i) => renderCard(item, i)).join('');
-    listEl.innerHTML = quickMenu + cards;
-  }
-
-  function renderCard(item, i) {
-    const isFav = state.favorites.includes(item.id);
-    return `
-      <div class="card" style="animation-delay:${i * 0.04}s" onclick="openDetail('${item.id}')">
-        <div class="card-top">
-          <h3>${escHtml(item.title)}</h3>
-          <span class="card-badge ${item.status === 'open' ? 'open' : 'closed'}">
-            ${item.status === 'open' ? '모집중' : '마감'}
-          </span>
-        </div>
-        <div class="card-meta">
-          <p>🏢 ${escHtml(item.company)}</p>
-          <p>📍 ${escHtml(item.location)}</p>
-          <p>💰 ${escHtml(item.salary)}</p>
-          <p>⏰ ${escHtml(item.deadline)}</p>
-        </div>
-        <div class="card-tags">
-          <span class="tag">${escHtml(item.type)}</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
-          <span class="card-arrow">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.35"><polyline points="9 18 15 12 9 6"/></svg>
-          </span>
-          <span class="fav-star ${isFav ? 'active' : ''}" onclick="toggleFav(event,'${item.id}')">
-            ${isFav ? '★' : '☆'}
-          </span>
-        </div>
-      </div>`;
-  }
-
-  function renderSkeletons() {
-    return Array.from({length: 4}, () => `
-      <div class="skeleton-card">
-        <div class="skel skel-title"></div>
-        <div class="skel skel-sub"></div>
-        <div class="skel skel-sub2"></div>
-      </div>`).join('');
-  }
-
-  /* ── 상세보기 ── */
-  function openDetail(id) {
-    const all = [...state.jobs, ...state.policies];
-    const item = all.find(d => d.id === id);
-    if (!item) return;
-    state.currentItem = item;
-
-    document.getElementById('detailBadge').textContent  = item.status === 'open' ? '모집중' : '마감';
-    document.getElementById('detailBadge').className    = 'detail-badge' + (item.status === 'open' ? '' : ' closed');
-    document.getElementById('detailTitle').textContent  = item.title;
-    document.getElementById('detailCompany').textContent  = item.company;
-    document.getElementById('detailLocation').textContent = item.location;
-    document.getElementById('detailType').textContent     = item.type;
-    document.getElementById('detailSalary').textContent   = item.salary;
-    document.getElementById('detailDeadline').textContent = item.deadline;
-    document.getElementById('detailSource').textContent   = '고용24';
-    document.getElementById('detailLink').href = item.link;
-
-    const descEl = document.getElementById('detailDesc');
-    if (item.desc) {
-      descEl.innerHTML = item.desc;
-      descEl.classList.remove('hidden');
-    } else {
-      descEl.classList.add('hidden');
-    }
-
-    const favBtn = document.getElementById('detailFavBtn');
-    const isFav = state.favorites.includes(id);
-    favBtn.textContent = isFav ? '★ 관심 공고 해제' : '⭐ 관심 공고 저장';
-
-    detailEl.classList.remove('hidden');
-    detailEl.scrollTop = 0;
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeDetail() {
-    detailEl.classList.add('hidden');
-    document.body.style.overflow = '';
-  }
-
-  /* ── 즐겨찾기 ── */
-  function toggleFav(e, id) {
-    e.stopPropagation();
-    const idx = state.favorites.indexOf(id);
-    if (idx >= 0) state.favorites.splice(idx, 1);
-    else state.favorites.push(id);
-    localStorage.setItem('emp24_favs', JSON.stringify(state.favorites));
-
-    if (state.currentItem && state.currentItem.id === id) {
-      const favBtn = document.getElementById('detailFavBtn');
-      favBtn.textContent = state.favorites.includes(id) ? '★ 관심 공고 해제' : '⭐ 관심 공고 저장';
-    }
-    render();
-  }
-
-  /* ── 페이지 전환 ── */
-  function changePage(page) {
-    state.page = page;
-    state.cat = 'all';
-    state.query = '';
-    searchInput.value = '';
-    updateTabUI();
-    updateFilterVisibility();
-    render();
-  }
-
-  function updateTabUI() {
-    document.querySelectorAll('.tab-btn[data-page]').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.page === state.page);
-    });
-  }
-
-  function updateFilterVisibility() {
-    const showFilter = state.page !== 'favorites';
-    filterRow.style.display = showFilter ? '' : 'none';
-    chipRow.style.display   = state.page === 'jobs' ? '' : 'none';
-  }
-
-  /* ── 이벤트 바인딩 ── */
-  function bindEvents() {
-    // 탭
-    document.querySelectorAll('.tab-btn[data-page]').forEach(btn => {
-      btn.addEventListener('click', () => changePage(btn.dataset.page));
-    });
-
-    // 토글
-    document.querySelectorAll('.toggle-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        state.filterState = btn.dataset.state;
-        document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const slider = document.querySelector('.toggle-slider');
-        slider.style.transform = btn.dataset.state === 'closed' ? 'translateX(100%)' : '';
-        render();
-      });
-    });
-
-    // 카테고리 칩
-    document.querySelectorAll('.chip').forEach(chip => {
-      chip.addEventListener('click', () => {
-        state.cat = chip.dataset.cat;
-        document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-        chip.classList.add('active');
-        render();
-      });
-    });
-
-    // 검색
-    let searchTimer;
-    searchInput.addEventListener('input', e => {
-      clearTimeout(searchTimer);
-      searchTimer = setTimeout(() => {
-        state.query = e.target.value;
-        render();
-      }, 250);
-    });
-
-    // 뒤로가기
-    backBtn.addEventListener('click', closeDetail);
-
-    // 상세 – 즐겨찾기
-    document.getElementById('detailFavBtn').addEventListener('click', () => {
-      if (state.currentItem) toggleFav({ stopPropagation: ()=>{} }, state.currentItem.id);
-    });
-
-    // 상세 – 링크
-    document.getElementById('detailLink').addEventListener('click', e => {
-      const href = document.getElementById('detailLink').href;
-      if (href && href !== '#') {
-        e.preventDefault();
-        overlay.classList.remove('hidden');
-        setTimeout(() => { window.open(href, '_blank'); overlay.classList.add('hidden'); }, 600);
-      }
-    });
-  }
-
-  function openSite(url) {
-    overlay.classList.remove('hidden');
-    setTimeout(() => { window.open(url, '_blank'); overlay.classList.add('hidden'); }, 500);
-  }
-
-  function escHtml(str) {
-    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
+  fetchNews();
   </script>
 </body>
 </html>
