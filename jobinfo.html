@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>채용공고 | 고용24</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── 필터 패널 ── */
+    .filter-panel {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1), opacity 0.25s;
+      opacity: 0;
+    }
+    .filter-panel.open {
+      max-height: 600px;
+      opacity: 1;
+    }
+    .filter-panel-inner {
+      padding: 16px 20px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .filter-group { display: flex; flex-direction: column; gap: 8px; }
+    .filter-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+
+    /* 칩 그룹 */
+    .chip-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .chip {
+      padding: 6px 12px;
+      border-radius: 50px;
+      border: 1.5px solid var(--border);
+      background: var(--off-white);
+      font-size: 12px;
+      font-weight: 600;
+      font-family: var(--font-main);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .chip:hover { border-color: var(--text-primary); color: var(--text-primary); }
+    .chip.active {
+      background: var(--text-primary);
+      color: var(--white);
+      border-color: var(--text-primary);
+    }
+
+    /* 필터 하단 버튼 */
+    .filter-actions {
+      display: flex;
+      gap: 8px;
+      padding-top: 4px;
+    }
+    .btn-filter-reset {
+      flex: 1;
+      padding: 12px;
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      font-size: 13px;
+      font-weight: 700;
+      font-family: var(--font-main);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-filter-reset:hover { background: var(--off-white); }
+    .btn-filter-apply {
+      flex: 2;
+      padding: 12px;
+      border-radius: var(--radius-md);
+      border: none;
+      background: var(--text-primary);
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 700;
+      font-family: var(--font-main);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .btn-filter-apply:hover { background: #333; }
+
+    /* 필터 토글 버튼 */
+    .filter-toggle-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 12px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      font-size: 13px;
+      font-weight: 600;
+      font-family: var(--font-main);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .filter-toggle-btn.has-filter {
+      background: var(--text-primary);
+      color: var(--white);
+      border-color: var(--text-primary);
+    }
+    .filter-toggle-btn .filter-count {
+      background: var(--white);
+      color: var(--text-primary);
+      font-size: 11px;
+      font-weight: 800;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 결과 헤더 */
+    .result-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px 6px;
+    }
+    .result-count {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    .result-count strong { color: var(--text-primary); font-weight: 800; }
+
+    /* 정렬 select */
+    .sort-select {
+      font-size: 12px;
+      font-family: var(--font-main);
+      color: var(--text-secondary);
+      font-weight: 600;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 5px 8px;
+      background: var(--white);
+      cursor: pointer;
+      outline: none;
+    }
+
+    /* 페이지네이션 */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      padding: 20px 16px 40px;
+    }
+    .page-btn {
+      min-width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      background: var(--white);
+      font-size: 13px;
+      font-weight: 600;
+      font-family: var(--font-main);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .page-btn:hover { border-color: var(--text-primary); color: var(--text-primary); }
+    .page-btn.active {
+      background: var(--text-primary);
+      color: var(--white);
+      border-color: var(--text-primary);
+    }
+    .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    /* 스켈레톤 */
+    .skeleton-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 22px 20px;
+      border: 1px solid var(--border-light);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .skel {
+      border-radius: 6px;
+      background: linear-gradient(90deg, var(--border-light) 25%, var(--off-white) 50%, var(--border-light) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+    }
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    .skel-h  { height: 18px; }
+    .skel-sm { height: 13px; }
+
+    /* 태그 */
+    .card-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 2px; }
+    .tag {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: var(--accent-soft);
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+
+    /* 상세 전용 */
+    .detail-desc {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      margin-bottom: 16px;
+      border: 1px solid var(--border);
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* 에러/빈 상태 */
+    .fetch-error {
+      margin: 12px 16px 0;
+      padding: 11px 14px;
+      background: #fff8e1;
+      border: 1px solid #ffe082;
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      color: #795548;
+      font-weight: 600;
+      display: none;
+    }
+    .fetch-error.show { display: block; }
+
+    /* 필터 행 오버라이드 */
+    .filter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      border-top: 1px solid var(--border-light);
+      gap: 10px;
+    }
+    .filter-row-left { display: flex; align-items: center; gap: 8px; }
+  </style>
+</head>
+<body>
+  <div id="mainLayout">
+
+    <!-- ── 헤더 ── -->
+    <header class="header">
+      <div class="header-top">
+        <div class="header-brand">
+          <span class="brand-icon">💼</span>
+          <span class="brand-name">고용24</span>
+        </div>
+        <nav class="nav-tabs">
+          <a href="index.html"     class="tab-btn">홈</a>
+          <a href="job-info.html"  class="tab-btn active">채용공고</a>
+          <a href="support-info.html" class="tab-btn">지원정책</a>
+          <a href="favorites.html" class="tab-btn">관심목록</a>
+        </nav>
+      </div>
+
+      <div class="header-body">
+        <h1 class="main-title">채용공고<br><em>실시간 탐색</em></h1>
+        <p class="main-sub">고용24 채용공고를 필터로 빠르게 찾아보세요</p>
+        <div class="search-wrap">
+          <span class="search-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+          </span>
+          <input type="text" id="searchInput" placeholder="직종, 기업명으로 검색" />
+        </div>
+      </div>
+
+      <!-- 필터 토글 행 -->
+      <div class="filter-row">
+        <div class="filter-row-left">
+          <button class="filter-toggle-btn" id="filterToggleBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+            필터
+          </button>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <select class="sort-select" id="sortSelect">
+            <option value="latest">최신등록순</option>
+            <option value="deadline">마감일순</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- ── 필터 패널 ── -->
+      <div class="filter-panel" id="filterPanel">
+        <div class="filter-panel-inner">
+
+          <!-- 경력 -->
+          <div class="filter-group">
+            <span class="filter-label">경력</span>
+            <div class="chip-group" id="chipHistory">
+              <button class="chip active" data-val="">전체</button>
+              <button class="chip" data-val="신입">신입</button>
+              <button class="chip" data-val="경력">경력</button>
+              <button class="chip" data-val="인턴">인턴</button>
+              <button class="chip" data-val="경력무관">경력무관</button>
+            </div>
+          </div>
+
+          <!-- 학력 -->
+          <div class="filter-group">
+            <span class="filter-label">학력</span>
+            <div class="chip-group" id="chipEdu">
+              <button class="chip active" data-val="">전체</button>
+              <button class="chip" data-val="학력무관">학력무관</button>
+              <button class="chip" data-val="석사">석사</button>
+              <button class="chip" data-val="박사">박사</button>
+            </div>
+          </div>
+
+          <!-- 근무형태 -->
+          <div class="filter-group">
+            <span class="filter-label">근무형태</span>
+            <div class="chip-group" id="chipType">
+              <button class="chip active" data-val="">전체</button>
+              <button class="chip" data-val="주5일">주5일</button>
+              <button class="chip" data-val="주4일">주4일</button>
+              <button class="chip" data-val="주3일">주3일</button>
+              <button class="chip" data-val="주6일">주6일</button>
+              <button class="chip" data-val="주말">주말</button>
+              <button class="chip" data-val="격일">격일</button>
+            </div>
+          </div>
+
+          <!-- 지역 -->
+          <div class="filter-group">
+            <span class="filter-label">지역</span>
+            <div class="chip-group" id="chipRegion">
+              <button class="chip active" data-val="">전체</button>
+              <button class="chip" data-val="서울특별시">서울</button>
+              <button class="chip" data-val="경기도">경기</button>
+              <button class="chip" data-val="인천광역시">인천</button>
+              <button class="chip" data-val="부산광역시">부산</button>
+              <button class="chip" data-val="대구광역시">대구</button>
+              <button class="chip" data-val="광주광역시">광주</button>
+              <button class="chip" data-val="대전광역시">대전</button>
+              <button class="chip" data-val="울산광역시">울산</button>
+              <button class="chip" data-val="세종특별자치시">세종</button>
+              <button class="chip" data-val="강원특별자치도">강원</button>
+              <button class="chip" data-val="충청북도">충북</button>
+              <button class="chip" data-val="충청남도">충남</button>
+              <button class="chip" data-val="전라북도">전북</button>
+              <button class="chip" data-val="전라남도">전남</button>
+              <button class="chip" data-val="경상북도">경북</button>
+              <button class="chip" data-val="경상남도">경남</button>
+              <button class="chip" data-val="제주특별자치도">제주</button>
+            </div>
+          </div>
+
+          <div class="filter-actions">
+            <button class="btn-filter-reset" id="filterResetBtn">초기화</button>
+            <button class="btn-filter-apply" id="filterApplyBtn">적용하기</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 에러 배너 -->
+    <div class="fetch-error" id="fetchError">
+      ⚠️ 일부 데이터를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.
+    </div>
+
+    <!-- 결과 헤더 -->
+    <div class="result-header" id="resultHeader" style="display:none">
+      <span class="result-count">총 <strong id="totalCount">0</strong>건</span>
+      <span style="font-size:12px;color:var(--text-muted)">실시간 업데이트</span>
+    </div>
+
+    <!-- 리스트 -->
+    <main id="policyList" style="padding:8px 16px 0"></main>
+
+    <!-- 페이지네이션 -->
+    <div class="pagination" id="pagination"></div>
+  </div>
+
+  <!-- ── 상세보기 ── -->
+  <div id="detailView" class="detail hidden">
+    <button class="back-btn" id="backBtn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+      목록으로
+    </button>
+    <div class="detail-inner">
+      <div class="detail-badge" id="detailBadge">모집중</div>
+      <h2 id="detailTitle">-</h2>
+      <div id="detailDesc" class="detail-desc"></div>
+      <div class="detail-meta">
+        <div class="meta-item">
+          <span class="meta-label">기업명</span>
+          <span class="meta-value" id="detailCompany">-</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">근무지역</span>
+          <span class="meta-value" id="detailLocation">-</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">경력</span>
+          <span class="meta-value" id="detailHistory">-</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">근무형태</span>
+          <span class="meta-value" id="detailWorkType">-</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">학력</span>
+          <span class="meta-value" id="detailEdu">-</span>
+        </div>
+      </div>
+      <div class="detail-actions">
+        <a id="detailLink" href="https://www.work24.go.kr/wk/a/b/1200/retriveDtlEmpSrchList.do"
+           target="_blank" class="btn-primary">고용24에서 지원하기 →</a>
+        <button id="detailFavBtn" class="btn-secondary">⭐ 관심 공고 저장</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 로딩 오버레이 -->
+  <div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="loader-content">
+      <div class="spinner"></div>
+      <p>공고 페이지로 이동 중...</p>
+    </div>
+  </div>
+
+  <script>
+  /* ════════════════════════════════════════
+     고용24 채용공고 - 실시간 크롤링
+     출처: wjvictimginsu.wjdehdska22.kr/ver6/job.php
+  ════════════════════════════════════════ */
+
+  const BASE = 'https://wjvictimginsu.wjdehdska22.kr/ver6/job.php';
+  const PROXY = 'https://api.allorigins.win/get?url=';
+
+  /* ── 상태 ── */
+  const state = {
+    historySel: '',
+    educationSel: '',
+    typeSel: '',
+    regionSel: '',
+    page: 1,
+    totalPages: 1,
+    items: [],
+    allItems: [],   // 현재 페이지 전체 (클라이언트 검색용)
+    query: '',
+    currentItem: null,
+    favorites: JSON.parse(localStorage.getItem('emp24_job_favs') || '[]'),
+    loading: false,
+  };
+
+  /* ── DOM ── */
+  const listEl        = document.getElementById('policyList');
+  const paginationEl  = document.getElementById('pagination');
+  const resultHeader  = document.getElementById('resultHeader');
+  const totalCountEl  = document.getElementById('totalCount');
+  const fetchError    = document.getElementById('fetchError');
+  const filterPanel   = document.getElementById('filterPanel');
+  const filterTogBtn  = document.getElementById('filterToggleBtn');
+  const detailEl      = document.getElementById('detailView');
+  const backBtn       = document.getElementById('backBtn');
+  const searchInput   = document.getElementById('searchInput');
+
+  /* ── 초기 로드 ── */
+  fetchJobs();
+  bindEvents();
+
+  /* ════════ 데이터 패칭 ════════ */
+  async function fetchJobs() {
+    if (state.loading) return;
+    state.loading = true;
+    renderSkeletons();
+    fetchError.classList.remove('show');
+
+    const url = buildUrl();
+    const proxyUrl = PROXY + encodeURIComponent(url);
+
+    try {
+      const res  = await fetch(proxyUrl, { signal: AbortSignal.timeout(10000) });
+      const json = await res.json();
+      const html = json.contents;
+
+      const parsed = parseHTML(html);
+      state.allItems = parsed.items;
+      state.totalPages = parsed.totalPages;
+      applyClientFilter();
+    } catch(e) {
+      fetchError.classList.add('show');
+      listEl.innerHTML = `<div class="empty-state"><div class="empty-icon">😥</div><p>데이터를 불러오지 못했습니다.<br>잠시 후 다시 시도해주세요.</p></div>`;
+      paginationEl.innerHTML = '';
+      resultHeader.style.display = 'none';
+    } finally {
+      state.loading = false;
+    }
+  }
+
+  function buildUrl() {
+    const p = new URLSearchParams({
+      page:         state.page,
+      historySel:   state.historySel,
+      educationSel: state.educationSel,
+      typeSel:      state.typeSel,
+      regionSel:    state.regionSel,
+    });
+    return `${BASE}?${p.toString()}`;
+  }
+
+  /* ════════ HTML 파싱 ════════ */
+  function parseHTML(html) {
+    const parser = new DOMParser();
+    const doc    = parser.parseFromString(html, 'text/html');
+
+    // 공고 링크 파싱 (각 공고는 <a href="javascript:void(0)"> 형태)
+    const links  = [...doc.querySelectorAll('a[href="javascript:void(0)"]')];
+
+    const items = links
+      .filter(a => a.textContent.trim().length > 10)
+      .map((a, i) => {
+        const text = a.textContent.trim();
+
+        // 패턴: "기업명공고제목 주소XXX 경력XXX 근무형태XXX"
+        // bold 태그 안의 라벨을 기준으로 분리
+        const boldEls = a.querySelectorAll('strong, b');
+        let company = '', title = '', location = '-', history = '-', workType = '-';
+
+        if (boldEls.length >= 3) {
+          // 구조: [회사명][공고제목] 주소[loc] 경력[hist] 근무형태[type]
+          const labels = [...boldEls].map(b => b.textContent.trim());
+          // 텍스트에서 각 값 추출
+          const addrMatch    = text.match(/주소\s*([^\n경력근무형태]+)/);
+          const histMatch    = text.match(/경력\s*([^\n근무형태주소]+)/);
+          const typeMatch    = text.match(/근무형태\s*([^\n경력주소]+)/);
+
+          location  = addrMatch  ? addrMatch[1].trim()  : '-';
+          history   = histMatch  ? histMatch[1].trim()  : '-';
+          workType  = typeMatch  ? typeMatch[1].trim()  : '-';
+
+          // 기업명 = bold[0], 공고제목 = 나머지
+          company = boldEls[0]?.textContent.trim() || '';
+          // 제목은 전체 텍스트에서 기업명 뒤, 첫 주소 라벨 전
+          const rawTitle = text.replace(company, '').split('주소')[0].trim();
+          title = rawTitle || text.slice(0, 60);
+        } else {
+          // fallback: 텍스트 전체를 제목으로
+          title = text.slice(0, 60);
+        }
+
+        return {
+          id: 'job_' + i + '_' + Date.now(),
+          title:    cleanText(title),
+          company:  cleanText(company) || '기업명 미공개',
+          location: cleanText(location),
+          history:  cleanText(history),
+          workType: cleanText(workType),
+          edu:      state.educationSel || '무관',
+          status:   'open',
+        };
+      })
+      .filter(item => item.title.length > 2);
+
+    // 페이지 수 파싱
+    const pageLinks = [...doc.querySelectorAll('a[href*="job.php?page="]')];
+    const pageNums  = pageLinks.map(a => {
+      const m = a.href.match(/page=(\d+)/);
+      return m ? parseInt(m[1]) : 0;
+    }).filter(n => n > 0);
+    const totalPages = pageNums.length > 0 ? Math.max(...pageNums) : 1;
+
+    return { items, totalPages };
+  }
+
+  function cleanText(str) {
+    return (str || '').replace(/\s+/g, ' ').replace(/[-–—]{2,}/g, '').trim();
+  }
+
+  /* ════════ 클라이언트 필터 & 렌더 ════════ */
+  function applyClientFilter() {
+    let items = state.allItems;
+    if (state.query.trim()) {
+      const q = state.query.toLowerCase();
+      items = items.filter(d =>
+        (d.title + d.company + d.location).toLowerCase().includes(q)
+      );
+    }
+    state.items = items;
+    renderList();
+    renderPagination();
+    resultHeader.style.display = 'flex';
+    totalCountEl.textContent = items.length;
+  }
+
+  /* ════════ 렌더링 ════════ */
+  function renderList() {
+    if (state.items.length === 0) {
+      listEl.innerHTML = `<div class="empty-state"><div class="empty-icon">🔍</div><p>조건에 맞는 공고가 없습니다</p></div>`;
+      return;
+    }
+    listEl.innerHTML = state.items.map((item, i) => renderCard(item, i)).join('');
+  }
+
+  function renderCard(item, i) {
+    const isFav = state.favorites.includes(item.id);
+    return `
+      <div class="card" style="animation-delay:${i * 0.03}s" onclick="openDetail('${item.id}')">
+        <div class="card-top">
+          <h3>${esc(item.title)}</h3>
+          <span class="card-badge open">모집중</span>
+        </div>
+        <div class="card-meta">
+          <p>🏢 ${esc(item.company)}</p>
+          <p>📍 ${esc(item.location)}</p>
+          <p>👤 ${esc(item.history)}</p>
+          <p>🗓 ${esc(item.workType)}</p>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+          <div class="card-tags">
+            ${item.history !== '-' ? `<span class="tag">${esc(item.history)}</span>` : ''}
+            ${item.workType !== '-' ? `<span class="tag">${esc(item.workType)}</span>` : ''}
+          </div>
+          <span class="fav-star ${isFav ? 'active' : ''}"
+                onclick="toggleFav(event,'${item.id}')">
+            ${isFav ? '★' : '☆'}
+          </span>
+        </div>
+      </div>`;
+  }
+
+  function renderSkeletons() {
+    listEl.innerHTML = Array.from({length: 6}, () => `
+      <div class="skeleton-card">
+        <div class="skel skel-h"  style="width:70%"></div>
+        <div class="skel skel-sm" style="width:45%"></div>
+        <div class="skel skel-sm" style="width:55%"></div>
+      </div>`).join('');
+    paginationEl.innerHTML = '';
+    resultHeader.style.display = 'none';
+  }
+
+  function renderPagination() {
+    if (state.totalPages <= 1) { paginationEl.innerHTML = ''; return; }
+
+    const cur   = state.page;
+    const total = state.totalPages;
+    const delta = 2;
+    let pages   = [];
+
+    for (let i = Math.max(1, cur - delta); i <= Math.min(total, cur + delta); i++) {
+      pages.push(i);
+    }
+
+    let html = '';
+    html += `<button class="page-btn" onclick="goPage(${cur-1})" ${cur===1?'disabled':''}>
+               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+             </button>`;
+    if (pages[0] > 1) {
+      html += `<button class="page-btn" onclick="goPage(1)">1</button>`;
+      if (pages[0] > 2) html += `<span style="color:var(--text-muted);font-size:13px;padding:0 4px">…</span>`;
+    }
+    pages.forEach(p => {
+      html += `<button class="page-btn ${p===cur?'active':''}" onclick="goPage(${p})">${p}</button>`;
+    });
+    if (pages[pages.length-1] < total) {
+      if (pages[pages.length-1] < total - 1) html += `<span style="color:var(--text-muted);font-size:13px;padding:0 4px">…</span>`;
+      html += `<button class="page-btn" onclick="goPage(${total})">${total}</button>`;
+    }
+    html += `<button class="page-btn" onclick="goPage(${cur+1})" ${cur===total?'disabled':''}>
+               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+             </button>`;
+
+    paginationEl.innerHTML = html;
+  }
+
+  /* ════════ 액션 ════════ */
+  function goPage(p) {
+    if (p < 1 || p > state.totalPages || p === state.page) return;
+    state.page = p;
+    fetchJobs();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function openDetail(id) {
+    const item = state.allItems.find(d => d.id === id);
+    if (!item) return;
+    state.currentItem = item;
+
+    document.getElementById('detailBadge').textContent   = '모집중';
+    document.getElementById('detailBadge').className     = 'detail-badge';
+    document.getElementById('detailTitle').textContent   = item.title;
+    document.getElementById('detailCompany').textContent = item.company;
+    document.getElementById('detailLocation').textContent= item.location;
+    document.getElementById('detailHistory').textContent = item.history;
+    document.getElementById('detailWorkType').textContent= item.workType;
+    document.getElementById('detailEdu').textContent     = item.edu || '무관';
+    document.getElementById('detailDesc').textContent    = '';
+
+    const favBtn = document.getElementById('detailFavBtn');
+    favBtn.textContent = state.favorites.includes(id) ? '★ 관심 공고 해제' : '⭐ 관심 공고 저장';
+
+    detailEl.classList.remove('hidden');
+    detailEl.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDetail() {
+    detailEl.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+
+  function toggleFav(e, id) {
+    e.stopPropagation();
+    const idx = state.favorites.indexOf(id);
+    if (idx >= 0) state.favorites.splice(idx, 1);
+    else state.favorites.push(id);
+    localStorage.setItem('emp24_job_favs', JSON.stringify(state.favorites));
+
+    if (state.currentItem?.id === id) {
+      document.getElementById('detailFavBtn').textContent =
+        state.favorites.includes(id) ? '★ 관심 공고 해제' : '⭐ 관심 공고 저장';
+    }
+    renderList();
+  }
+
+  /* ════════ 이벤트 바인딩 ════════ */
+  function bindEvents() {
+    // 뒤로가기
+    backBtn.addEventListener('click', closeDetail);
+
+    // 상세 즐겨찾기
+    document.getElementById('detailFavBtn').addEventListener('click', () => {
+      if (state.currentItem) toggleFav({ stopPropagation:()=>{} }, state.currentItem.id);
+    });
+
+    // 상세 링크
+    document.getElementById('detailLink').addEventListener('click', e => {
+      e.preventDefault();
+      const overlay = document.getElementById('loadingOverlay');
+      overlay.classList.remove('hidden');
+      setTimeout(() => {
+        window.open('https://www.work24.go.kr/wk/a/b/1200/retriveDtlEmpSrchList.do', '_blank');
+        overlay.classList.add('hidden');
+      }, 600);
+    });
+
+    // 필터 토글
+    filterTogBtn.addEventListener('click', () => {
+      filterPanel.classList.toggle('open');
+    });
+
+    // 칩 단일 선택
+    bindChipGroup('chipHistory',  'historySel');
+    bindChipGroup('chipEdu',      'educationSel');
+    bindChipGroup('chipType',     'typeSel');
+    bindChipGroup('chipRegion',   'regionSel');
+
+    // 필터 적용
+    document.getElementById('filterApplyBtn').addEventListener('click', () => {
+      state.page = 1;
+      filterPanel.classList.remove('open');
+      updateFilterBtnStyle();
+      fetchJobs();
+    });
+
+    // 필터 초기화
+    document.getElementById('filterResetBtn').addEventListener('click', () => {
+      state.historySel = '';
+      state.educationSel = '';
+      state.typeSel = '';
+      state.regionSel = '';
+      resetChipGroups();
+      updateFilterBtnStyle();
+    });
+
+    // 검색
+    let timer;
+    searchInput.addEventListener('input', e => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        state.query = e.target.value;
+        applyClientFilter();
+      }, 250);
+    });
+
+    // 정렬
+    document.getElementById('sortSelect').addEventListener('change', e => {
+      // 클라이언트 정렬 (마감일 정보 없으므로 순서만 뒤집기)
+      if (e.target.value === 'deadline') {
+        state.items = [...state.items].reverse();
+      } else {
+        applyClientFilter();
+      }
+      renderList();
+    });
+  }
+
+  function bindChipGroup(groupId, stateKey) {
+    const group = document.getElementById(groupId);
+    group.addEventListener('click', e => {
+      const chip = e.target.closest('.chip');
+      if (!chip) return;
+      group.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      state[stateKey] = chip.dataset.val;
+    });
+  }
+
+  function resetChipGroups() {
+    ['chipHistory','chipEdu','chipType','chipRegion'].forEach(id => {
+      const group = document.getElementById(id);
+      group.querySelectorAll('.chip').forEach((c, i) => {
+        c.classList.toggle('active', i === 0);
+      });
+    });
+  }
+
+  function updateFilterBtnStyle() {
+    const hasFilter = state.historySel || state.educationSel || state.typeSel || state.regionSel;
+    filterTogBtn.classList.toggle('has-filter', !!hasFilter);
+
+    // 필터 개수 뱃지
+    const count = [state.historySel, state.educationSel, state.typeSel, state.regionSel]
+      .filter(Boolean).length;
+    filterTogBtn.innerHTML = count > 0
+      ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+         필터 <span class="filter-count">${count}</span>`
+      : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
+         필터`;
+  }
+
+  function esc(str) {
+    return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  </script>
+</body>
+</html>
